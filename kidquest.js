@@ -9,8 +9,9 @@ var express = require('express'),
 var app = express();
 var port = process.env.port || 8000;
 
+// this silences the error about mongo's mpromise library
+mongoose.Promise = global.Promise;
 //  connect to mongo
-mongoose.Promise = global.Promise; // this silences the error about mongo's mpromise library
 mongoose.connect("mongodb://localhost");
 
 //  basic config for body-parser
@@ -62,6 +63,27 @@ app.post('/user/register', (req, res) => {
             res.status(400);
             res.send({status: 'error', message: 'email address is already in use'});
         }
+    });
+});
+
+app.post('/user/login', (req, res) => {
+    if (!req.body.user || !req.body.password) {
+        res.status(401);
+        res.send({status: 'unauthorized', message: 'you must provide a username and password'});
+        return;
+    }
+
+
+});
+
+app.get('/user/:id', (req, res) => {
+    User.findById(req.params.id, (err, user) => {
+        if (err) {
+            res.send({status: 'error', message: 'err'});
+            return;
+        }
+
+        res.send({status: 'success', user: user});
     });
 });
 
