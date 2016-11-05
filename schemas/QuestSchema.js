@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 
-module.exports = (mongoose, User) => {
+module.exports = (mongoose, LootItem) => {
     var QuestSchema = new mongoose.Schema({
         title: String,
         description: String,

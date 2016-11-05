@@ -11,5 +11,9 @@ module.exports = (mongoose, Child) => {
 
     var User = mongoose.model('User', UserSchema);
 
+    UserSchema.methods.findById = function(user) {
+        return this.model('User').find({ _id: this._id }, user);
+    };
+
     return User;
 };
