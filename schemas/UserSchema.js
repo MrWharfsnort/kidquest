@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 
-module.exports = (mongoose) => {
+module.exports = (mongoose, Child) => {
     var UserSchema = new mongoose.Schema({
         name: String,
         email: String,
