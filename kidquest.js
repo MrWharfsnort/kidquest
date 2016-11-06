@@ -9,6 +9,11 @@ var express = require('express'),
 var app = express();
 var port = process.env.port || 8000;
 
+var User = require('./schemas/UserSchema.js')(mongoose, Child);
+var Child = require('./schemas/ChildSchema.js')(mongoose, User);
+var Quest = require('./schemas/QuestSchema.js')(mongoose, LootItem);
+var LootItem = require('./schemas/LootItemSchema.js')(mongoose);
+
 // this silences the error about mongo's mpromise library
 mongoose.Promise = global.Promise;
 //  connect to mongo
@@ -25,11 +30,8 @@ app.use(session({
     saveUninitialized: false
 }));
 
-var User = require('./schemas/UserSchema.js')(mongoose, Child);
-var Child = require('./schemas/ChildSchema.js')(mongoose, User);
-var Quest = require('./schemas/QuestSchema.js')(mongoose, LootItem);
-var LootItem = require('./schemas/LootItemSchema.js')(mongoose)
 
+// user registration
 app.post('/user/register', (req, res) => {
     // check to see if email already exists in database
     User.find({email: req.body.email}, (err, email) => {
@@ -66,20 +68,50 @@ app.post('/user/register', (req, res) => {
     });
 });
 
+// user login
 app.post('/user/login', (req, res) => {
-    if (!req.body.user || !req.body.password) {
+    // don't give us blank info
+    if (!req.body.email || !req.body.password) {
         res.status(401);
         res.send({status: 'unauthorized', message: 'you must provide a username and password'});
         return;
     }
 
+    User.find({ email: req.body.email }, (err, user) => {
+        if (err) {
+            res.status(500);
+            res.send({status: 'error', message: 'something went wrong: ' + err });
+            return;
+        }
+        else if (user.length === 0 || user[0].password !== req.body.password) {
+            res.status(401);
+            res.send({status: 'unauthorized', message: 'unable to log in'});
+            console.log(user[0]);
+            console.info('unauthorized attempt for user: ', req.body.username);
+            return;
+        } else {
+            req.session.user = user[0]._id;
+            res.send({status: 'authorized', message: 'successfully logged in'});
+            console.info('User' + user[0].name + ' successfully logged in');
+        }
+    });
 
 });
+
+app.post('/user/logout', (req, res) => {
+    delete req.session;
+    res.send({status: 'success', message: 'you have successfully logged out'});
+});
+
 
 app.get('/user/:id', (req, res) => {
     User.findById(req.params.id, (err, user) => {
         if (err) {
             res.send({status: 'error', message: 'err'});
+            return;
+        } else if (user._id !== req.session.user) {
+            res.status(401);
+            res.send({status: 'unauthorized', message: 'not authorized to view this information'});
             return;
         }
 
@@ -88,30 +120,32 @@ app.get('/user/:id', (req, res) => {
 });
 
 
-/*
 
+
+
+/*
     POST /user/register
     (Add a new user)
 
     POST /user/login
     (User Login)
 
-    POST /user/:id/child
-    (Add a new child)
+    POST /user/child
+    * (Add a new child)
 
-    GET /user/:id/children
-    (Get children of User)
+    GET /user/children
+    * (Get children of User)
     should look in user.children array and return the objects in child collection based on those id numbers
     find {}
 
     POST /api/quest
-    (Add a new quest)
+    * (Add a new quest)
 
     GET /api/quest/:id
-    (Get quest by ID)
+    * (Get quest by ID)
 
     GET /user/:id
-    (Get user by ID)
+    * (Get user by ID)
 
 */
 
