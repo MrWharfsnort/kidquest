@@ -23,13 +23,17 @@ mongoose.connect("mongodb://localhost");
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+app.use('/node_modules', express.static(__dirname + '/node_modules'));
+
+//The src folder has our static resources (index.html, css, images)
+app.use(express.static(__dirname + '/public'));
+
 // config express-session
 app.use(session({
     secret: '98uyhujhgty78iko09i8uyhgt5tghjioplkju89ijhyhy6trdfghjkmnhuio09iuhygf2345tghjk',
     resave: false,
     saveUninitialized: false
 }));
-
 
 // user registration
 app.post('/user/register', (req, res) => {
@@ -92,18 +96,19 @@ app.post('/user/login', (req, res) => {
         } else {
             req.session.user = user[0]._id;
             res.send({status: 'authorized', message: 'successfully logged in'});
-            console.info('User' + user[0].name + ' successfully logged in');
+            console.info('User ' + user[0].name + ' successfully logged in');
         }
     });
 
 });
 
+//  logout user
 app.post('/user/logout', (req, res) => {
     delete req.session;
     res.send({status: 'success', message: 'you have successfully logged out'});
 });
 
-
+// get user by id
 app.get('/user/:id', (req, res) => {
     User.findById(req.params.id, (err, user) => {
         if (err) {
@@ -120,15 +125,44 @@ app.get('/user/:id', (req, res) => {
 });
 
 
+app.post('/user/child', (req, res) => {
+    if (!req.session) {
+        res.status(401);
+        res.send({status: 'unauthorized', message: 'you must be logged in'});
+        return;
+    }
+
+    Child.find({ name: req.body.name, parent: req.session.user }, (err, child) => {
+        if (err) {
+            res.status(500);
+            res.send({message: 'server error: ' + err});
+            return;
+        } else if (child.length === 0) {
+            var newChild = new Child({
+                name: req.body.childName,
+                password: req.body.childPass,
+                parent: req.session.user,
+                activeQuests: [],
+                hero:  {
+                    name: req.body.childName,
+                    inventory: [],
+                    credits: 0,
+                    xp: 0,
+                    strength: 0,
+                    wisdom: 0,
+                    kindness: 0,
+                    courage: 0,
+                    responsibility: 0
+                }
+            });
+        }
+    });
+});
+
 
 
 
 /*
-    POST /user/register
-    (Add a new user)
-
-    POST /user/login
-    (User Login)
 
     POST /user/child
     * (Add a new child)
@@ -144,9 +178,6 @@ app.get('/user/:id', (req, res) => {
     GET /api/quest/:id
     * (Get quest by ID)
 
-    GET /user/:id
-    * (Get user by ID)
-
 */
 
 // handle 404 error
@@ -158,9 +189,13 @@ app.use((req, res, next) => {
 // handle 500 errors
 app.use((err, req, res, next) => {
     res.status(500);
-    res.send({message: 'Server error, ' + err});
+    console.log('server error', err);
+    res.send({status: 'error', message: 'Server error'});
 });
 
+app.all('/*', function(req, res) {
+    res.sendFile(__dirname + '/public/index.html');
+});
 
 // server start
 app.listen(port, () => {
