@@ -4,10 +4,10 @@ var express = require('express'),
     session = require('express-session'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
-    path = require('path');
-
-var app = express();
-var port = process.env.port || 8000;
+    path = require('path'),
+    cors = require('cors'),
+    app = express(),
+    port = process.env.port || 3002;
 
 var User = require('./schemas/UserSchema.js')(mongoose, Child);
 var Child = require('./schemas/ChildSchema.js')(mongoose, User);
@@ -22,17 +22,19 @@ mongoose.connect("mongodb://localhost");
 //  basic config for body-parser
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-
-app.use('/node_modules', express.static(__dirname + '/node_modules'));
-
-//The src folder has our static resources (index.html, css, images)
-app.use(express.static(__dirname + '/public'));
+app.use(cors({
+    credentials: true,
+    origin: true
+}));
 
 // config express-session
 app.use(session({
     secret: '98uyhujhgty78iko09i8uyhgt5tghjioplkju89ijhyhy6trdfghjkmnhuio09iuhygf2345tghjk',
     resave: false,
-    saveUninitialized: false
+    cookie: {
+        secure: false
+    },
+    saveUninitialized: true
 }));
 
 // user registration
@@ -51,23 +53,20 @@ app.post('/user/register', (req, res) => {
             newUser.save((err) => {
                 // handle errors on save, just in case
                 if (err) {
-                    res.status(500);
                     console.error(err);
                     res.send({status: 'error', message: 'unable to register user: ' + err});
                 }
 
                 console.info('User ' + req.body.name + ' added');
-
+                req.session.user = newUser._id;
                 res.send({status: 'registered',
-                    message: 'user ' + req.body.name + ' was successfully registered'
+                    user: newUser
                 });
             });
         } else if (err) {
-            res.status(500);
             res.send({status: 'error', message: 'server error: ' + err});
         } else {
-            res.status(400);
-            res.send({status: 'error', message: 'email address is already in use'});
+            res.send({status: 'error', message: 'an account with this email is already registered'});
         }
     });
 });
@@ -76,26 +75,24 @@ app.post('/user/register', (req, res) => {
 app.post('/user/login', (req, res) => {
     // don't give us blank info
     if (!req.body.email || !req.body.password) {
-        res.status(401);
         res.send({status: 'unauthorized', message: 'you must provide a username and password'});
         return;
     }
 
     User.find({ email: req.body.email }, (err, user) => {
         if (err) {
-            res.status(500);
             res.send({status: 'error', message: 'something went wrong: ' + err });
             return;
         }
         else if (user.length === 0 || user[0].password !== req.body.password) {
-            res.status(401);
             res.send({status: 'unauthorized', message: 'unable to log in'});
             console.log(user[0]);
             console.info('unauthorized attempt for user: ', req.body.username);
             return;
         } else {
             req.session.user = user[0]._id;
-            res.send({status: 'authorized', message: 'successfully logged in'});
+            console.log('api-session',req.session);
+            res.send({status: 'authorized', authUser: user[0]});
             console.info('User ' + user[0].name + ' successfully logged in');
         }
     });
@@ -109,14 +106,16 @@ app.post('/user/logout', (req, res) => {
 });
 
 // get user by id
-app.get('/user/:id', (req, res) => {
-    User.findById(req.params.id, (err, user) => {
+app.get('/user', (req, res) => {
+    console.log('user-session', req.session.user);
+    if (!req.session.user) {
+        res.send({status: 'unauthorized', message: 'not authorized to view this information'});
+        return;
+    }
+
+    User.findById(req.session.user, (err, user) => {
         if (err) {
             res.send({status: 'error', message: 'err'});
-            return;
-        } else if (user._id !== req.session.user) {
-            res.status(401);
-            res.send({status: 'unauthorized', message: 'not authorized to view this information'});
             return;
         }
 
@@ -127,14 +126,12 @@ app.get('/user/:id', (req, res) => {
 
 app.post('/user/child', (req, res) => {
     if (!req.session) {
-        res.status(401);
         res.send({status: 'unauthorized', message: 'you must be logged in'});
         return;
     }
 
     Child.find({ name: req.body.name, parent: req.session.user }, (err, child) => {
         if (err) {
-            res.status(500);
             res.send({message: 'server error: ' + err});
             return;
         } else if (child.length === 0) {
@@ -159,9 +156,6 @@ app.post('/user/child', (req, res) => {
     });
 });
 
-
-
-
 /*
 
     POST /user/child
@@ -182,19 +176,13 @@ app.post('/user/child', (req, res) => {
 
 // handle 404 error
 app.use((req, res, next) => {
-    res.status(404);
     res.send({message: 'File not found'});
 });
 
 // handle 500 errors
 app.use((err, req, res, next) => {
-    res.status(500);
     console.log('server error', err);
     res.send({status: 'error', message: 'Server error'});
-});
-
-app.all('/*', function(req, res) {
-    res.sendFile(__dirname + '/public/index.html');
 });
 
 // server start

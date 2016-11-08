@@ -1,25 +1,25 @@
 {
-  "name": "kidquest",
+  "name": "angular-quickstart",
   "version": "1.0.0",
-  "description": "KidQuest is an application to promote good behaviors by gamifying chores and actions into quests",
-  "main": "kidquest.js",
   "scripts": {
-    "start": "tsc && concurrently -p \"[{name}]\" -n \"mongo,nodemon,tsc\" -c \"bgCyan.bold,bgMagenta.bold,bgYellow.bold,fgBlue\" \"mongod --dbpath ./data\" \"nodemon kidquest.js\" \"tsc -w\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
+    "lite": "lite-server",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w"
   },
-  "author": "Nate Farnsworth",
-  "license": "ISC",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/angular/angular.io/blob/master/LICENSE"
+    }
+  ],
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
-    "express-session": "^1.14.2",
-    "mongoose": "^4.6.6",
-    "path": "^0.12.7",
     "@angular/common": "~2.1.1",
     "@angular/compiler": "~2.1.1",
     "@angular/core": "~2.1.1",
     "@angular/forms": "~2.1.1",
     "@angular/http": "~2.1.1",
+    "@angular/material": "^2.0.0-alpha.9-3",
     "@angular/platform-browser": "~2.1.1",
     "@angular/platform-browser-dynamic": "~2.1.1",
     "@angular/router": "~3.1.1",
@@ -33,10 +33,9 @@
     "zone.js": "^0.6.25"
   },
   "devDependencies": {
-    "concurrently": "^3.1.0",
-    "nodemon": "^1.11.0",
     "@types/core-js": "^0.9.34",
     "@types/node": "^6.0.45",
+    "concurrently": "^3.0.0",
     "lite-server": "^2.2.2",
     "typescript": "^2.0.3"
   }

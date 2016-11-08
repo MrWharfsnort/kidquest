@@ -1,0 +1,20 @@
+{
+  "name": "kidquest",
+  "version": "1.0.0",
+  "description": "KidQuest is an application to promote good behaviors by gamifying chores and actions into quests",
+  "main": "kidquest.js",
+  "scripts": {
+    "start": "concurrently -p \"[{name}]\" -n \"mongo,node\" -c \"bgCyan.bold,bgMagenta.bold\" \"mongod --dbpath ./data\" \"nodemon kidquest.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nate Farnsworth",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "mongoose": "^4.6.6",
+    "path": "^0.12.7"
+  }
+}
