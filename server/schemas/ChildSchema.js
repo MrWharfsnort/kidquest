@@ -2,7 +2,10 @@
 
 module.exports = (mongoose, User) => {
     var ChildSchema = new mongoose.Schema({
-        name: String,
+        name: {
+            first: String,
+            last: String
+        },
         password: String,
         parent: String,
         activeQuests: [String],

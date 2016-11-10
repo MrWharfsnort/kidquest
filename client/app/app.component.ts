@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 
+import { NavBarComponent } from './dashboard/navbar.component';
+
 
 @Component({
     selector: 'kidquest',
     template: `
-        <h1>KidQuest</h1>
+        <navbar></navbar>
         <router-outlet></router-outlet>
     `
 })

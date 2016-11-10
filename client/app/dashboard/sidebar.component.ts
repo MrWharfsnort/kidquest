@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 
 import { AuthService } from '../auth.service';
-import { User } from './user';
+import { User } from '../user/user';
 
-import { } from './app/user/dashboard/navbar.component';
 
 @Component({
-    selector: 'user-details',
-    templateUrl: './app/user/user-details.html'
+    selector: 'sidebar',
+    templateUrl: './app/dashboard/sidebar.html'
 })
-export class UserDetailsComponent {
+export class SidebarComponent {
 
     private user: User;
 
@@ -17,8 +16,5 @@ export class UserDetailsComponent {
         this.user = this.authService.user;
         this.authService.getUserFromServer();
     }
-
     constructor(private authService: AuthService) { }
-
-
 }

@@ -1,0 +1,34 @@
+<div class="col-md-7 col-md-offset-1">
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h3 class="panel-title">Add Child</h3></div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="childName" class="col-sm-2 control-label text-right">Name</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" [(ngModel)]='this.newChild.name.first' name="childFirstName" placeholder="First">
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" [(ngModel)]='newChild.name.last' name="childLastName" placeholder="Last">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="childPass" class="col-sm-2  control-label text-right">Password</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" [(ngModel)]='newChild.password' name="childPass" placeholder="Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPass" class="col-sm-2  control-label text-right">Confirm Password</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" [(ngModel)]='confirmPass' name="confirmPass" placeholder="Confirm Password">
+                    </div>
+                </div>
+            <button class="btn btn-primary pull-right" type="submit" (click)='addChild()'>add child</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        $.notify('hello world');
+    </script>
+</div>

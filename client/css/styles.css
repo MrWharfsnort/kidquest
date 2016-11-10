@@ -1,0 +1,65 @@
+body {
+  padding-top: 70px;
+  background: url('../img/groovepaper.png');
+}
+
+.jumbotron {
+  height: 50%;
+  margin-top: -20px;
+  background: url('../img/rpgmaker.png');
+  background-size: cover;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 16px -8px #000;
+}
+.jumbotron > .container > h1 {
+  font-family: 'Lusitana', serif;
+  font-size: 100px;
+  text-shadow: 0 0 2px rgb(255, 217, 12);
+  color: #fff;
+}
+.jumbotron > .container > h2 {
+  font-family: 'Schoolbell', cursive;
+  color: #fff;
+  background: rgba(0, 0, 0, .5);
+  font-size: 24px;
+  padding: 24px;
+}
+/*
+.jumbotron > .container > h1,
+.jumbotron > .container > h2 {
+  margin: 0;
+}*/
+.navbar {
+  border: 0;
+}
+
+.sidebar {
+  background: rgb(75, 75, 75);
+  padding: 10px;
+  margin-top: -20px;
+}
+
+.sidebar > ul {
+  padding: 0;
+  margin: 0;
+}
+
+
+a {
+  cursor: pointer;
+}
+
+.navbar-header {
+  background: url('../img/knight.png') no-repeat 0 50%;
+}
+
+a.navbar-brand {
+  margin-left: 25px !important;
+  font-family: 'Lusitana', serif;
+  font-size: 24px
+}
+
+a.navbar-brand:hover {
+  text-shadow: 0 0 0.5em rgb(255, 229, 87);
+}

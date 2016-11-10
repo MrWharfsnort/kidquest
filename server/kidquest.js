@@ -1,18 +1,25 @@
 /* jshint esversion: 6 */
 
 var express = require('express'),
-    session = require('express-session'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
+    jwt = require('jsonwebtoken'),
+    passport = require('passport'),
+    passportJWT = require('passport-jwt'),
+    LocalStrategy = require("passport-local").Strategy,
+	JwtStrategy = require("passport-jwt").Strategy,
+	ExtractJwt = require("passport-jwt").ExtractJwt,
     path = require('path'),
     cors = require('cors'),
     app = express(),
-    port = process.env.port || 3002;
+    port = process.env.port || 3002,
+    User = require('./schemas/UserSchema.js')(mongoose, Child),
+    Child = require('./schemas/ChildSchema.js')(mongoose, User),
+    Quest = require('./schemas/QuestSchema.js')(mongoose, LootItem),
+    LootItem = require('./schemas/LootItemSchema.js')(mongoose);
 
-var User = require('./schemas/UserSchema.js')(mongoose, Child);
-var Child = require('./schemas/ChildSchema.js')(mongoose, User);
-var Quest = require('./schemas/QuestSchema.js')(mongoose, LootItem);
-var LootItem = require('./schemas/LootItemSchema.js')(mongoose);
+var secret = 't67uhy78iju3hy2748tritj42hy8w';
+
 
 // this silences the error about mongo's mpromise library
 mongoose.Promise = global.Promise;
@@ -27,15 +34,49 @@ app.use(cors({
     origin: true
 }));
 
-// config express-session
-app.use(session({
-    secret: '98uyhujhgty78iko09i8uyhgt5tghjioplkju89ijhyhy6trdfghjkmnhuio09iuhygf2345tghjk',
-    resave: false,
-    cookie: {
-        secure: false
-    },
-    saveUninitialized: true
+// initialize passport
+app.use(passport.initialize());
+
+// set up JWT strat
+passport.use(new JwtStrategy({
+		jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    	secretOrKey: secret
+	}, function(jwt_payload, done) {
+
+	// replace this with User.find (mongoose)
+	User.findOne({_id: jwt_payload._id}, (err, user) => {
+        if (err) {
+            done(err, false);
+        } else if (user) {
+            done(null, user);
+        } else {
+            done(null, false);
+        }
+    });
 }));
+
+// Set up username/pw strat
+passport.use(new LocalStrategy(
+	{usernameField: "email", passwordField: "password"},
+	(email, password, done) => {
+		// Replace this with User.find (mongoose)
+		User.findOne({ email: email, password: password}, (err, user) => {
+            if (user) {
+                user = user.toObject();
+
+                user.jwt = jwt.sign({
+                    _id: user._id
+                }, secret, {
+                    expiresIn: 10080 // seconds
+                });
+                return done(null, user);
+
+            } else {
+                return done(null, false, {message: "Incorrect username or password" });
+            }
+        });
+	}
+));
 
 // user registration
 app.post('/user/register', (req, res) => {
@@ -55,10 +96,17 @@ app.post('/user/register', (req, res) => {
                 if (err) {
                     console.error(err);
                     res.send({status: 'error', message: 'unable to register user: ' + err});
+                    return;
                 }
 
+                newUser.jwt = jwt.sign({
+                    _id: newUser._id
+                }, secret, {
+                    expiresIn: 10080 // seconds
+                });
+
                 console.info('User ' + req.body.name + ' added');
-                req.session.user = newUser._id;
+                // req.session.user = newUser._id;
                 res.send({status: 'registered',
                     user: newUser
                 });
@@ -72,48 +120,19 @@ app.post('/user/register', (req, res) => {
 });
 
 // user login
-app.post('/user/login', (req, res) => {
-    // don't give us blank info
-    if (!req.body.email || !req.body.password) {
-        res.send({status: 'unauthorized', message: 'you must provide a username and password'});
-        return;
+app.post('/user/login',	passport.authenticate("local", {session: false}), (req, res) => {
+    if (req.user) {
+        res.send({status: "success", user: req.user});
+    } else {
+        res.send({status: "error", message: "Incorrect username or password."});
     }
-
-    User.find({ email: req.body.email }, (err, user) => {
-        if (err) {
-            res.send({status: 'error', message: 'something went wrong: ' + err });
-            return;
-        }
-        else if (user.length === 0 || user[0].password !== req.body.password) {
-            res.send({status: 'unauthorized', message: 'unable to log in'});
-            console.log(user[0]);
-            console.info('unauthorized attempt for user: ', req.body.username);
-            return;
-        } else {
-            req.session.user = user[0]._id;
-            console.log('api-session',req.session);
-            res.send({status: 'authorized', authUser: user[0]});
-            console.info('User ' + user[0].name + ' successfully logged in');
-        }
-    });
-
 });
 
-//  logout user
-app.post('/user/logout', (req, res) => {
-    delete req.session;
-    res.send({status: 'success', message: 'you have successfully logged out'});
-});
 
 // get user by id
-app.get('/user', (req, res) => {
-    console.log('user-session', req.session.user);
-    if (!req.session.user) {
-        res.send({status: 'unauthorized', message: 'not authorized to view this information'});
-        return;
-    }
+app.get('/user', passport.authenticate("jwt", {session: false}), (req, res) => {
 
-    User.findById(req.session.user, (err, user) => {
+    User.findById(req.user._id, (err, user) => {
         if (err) {
             res.send({status: 'error', message: 'err'});
             return;
@@ -124,24 +143,27 @@ app.get('/user', (req, res) => {
 });
 
 
-app.post('/user/child', (req, res) => {
-    if (!req.session) {
+app.post('/user/child', passport.authenticate("jwt", {session: false}), (req, res) => {
+    if (!req.user) {
         res.send({status: 'unauthorized', message: 'you must be logged in'});
         return;
     }
 
-    Child.find({ name: req.body.name, parent: req.session.user }, (err, child) => {
+    Child.find({ name: req.body.name, parent: req.user._id }, (err, child) => {
         if (err) {
             res.send({message: 'server error: ' + err});
             return;
         } else if (child.length === 0) {
             var newChild = new Child({
-                name: req.body.childName,
-                password: req.body.childPass,
-                parent: req.session.user,
+                name: {
+                    first: req.body.name.first,
+                    last: req.body.name.last
+                },
+                password: req.body.password,
+                parent: req.user._id,
                 activeQuests: [],
                 hero:  {
-                    name: req.body.childName,
+                    name: req.body.name.first,
                     inventory: [],
                     credits: 0,
                     xp: 0,
@@ -152,27 +174,46 @@ app.post('/user/child', (req, res) => {
                     responsibility: 0
                 }
             });
+
+            newChild.save((err, child) => {
+                if (err) {
+                    console.log('Unable to add child: ', err);
+                    return;
+                } else {
+                    console.log('Child added: ', child);
+                }
+
+                var childId = child._id;
+
+                User.findOneAndUpdate(
+                    {_id: req.user._id},
+                    {$push: {children: childId}},
+                    {new: true},
+                    (err, data) => {
+                        if (err) {
+                            console.log('Unable to add child to user', err);
+                            return;
+                        } else {
+                            console.log('Child ' + childId + ' added to user ' + req.user);
+                            res.send({status: 'success', newChild: child});
+                        }
+                    }
+                );
+            });
         }
     });
 });
 
-/*
+app.get('/user/children', passport.authenticate('jwt', {session: false}), (req, res) => {
+    Child.find({parent: req.user._id}, (err, children) => {
+        if (err) {
+            res.send({status: 'error', message: 'unable to retrieve children ' + err});
+            return;
+        }
 
-    POST /user/child
-    * (Add a new child)
-
-    GET /user/children
-    * (Get children of User)
-    should look in user.children array and return the objects in child collection based on those id numbers
-    find {}
-
-    POST /api/quest
-    * (Add a new quest)
-
-    GET /api/quest/:id
-    * (Get quest by ID)
-
-*/
+        res.send({status: 'success', children: children});
+    });
+});
 
 // handle 404 error
 app.use((req, res, next) => {

@@ -4,8 +4,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { UserDetailsComponent } from './user/user-details.component';
 import { UserRegistrationComponent } from './user/user-registration.component';
-import { UserLoginComponent } from './user/user-login.component';
+import { UserLoginComponent } from './dashboard/user-login.component';
 import { AuthService } from './auth.service';
+
+import { ChildAddComponent } from './child/child-add.component';
+import { ChildDisplayComponent } from './child/child-display.component';
+import { ChildrenDisplayComponent } from './child/children-display.component';
 
 const routes: Routes = [
     {
@@ -17,13 +21,14 @@ const routes: Routes = [
         component: UserRegistrationComponent
     },
     {
-        path: 'login',
-        component: UserLoginComponent
-    },
-    {
         path: 'user/:id',
         component: UserDetailsComponent,
-        canActivate: [AuthService]
+        canActivate: [AuthService],
+        children: [
+            { path: '', component: ChildrenDisplayComponent}, // TODO - default is children
+            { path: 'children', component: ChildrenDisplayComponent},
+            { path: 'child/add', component: ChildAddComponent}
+        ]
     }
 ];
 
@@ -33,20 +38,6 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 
-
-//     {
-//         path: '',
-//         component: HeroViewComponent
-//     },
-//     {
-//         path: 'league',
-//         component: LeagueViewComponent,
-//         canActivate: [AuthService]
-//     },
-//     {
-//         path: 'hero/:id',
-//         component: HeroDetailComponent
-//     }
 
 // UserDetailComponent
 // UserLoginComponent

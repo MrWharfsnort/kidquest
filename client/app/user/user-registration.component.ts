@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { User } from './user';
-import { UserService } from './user.service';
 
 @Component({
     selector: 'register-user',
@@ -27,18 +26,17 @@ export class UserRegistrationComponent {
     private error: string = '';
 
     constructor (
-        private userService: UserService,
         private router: Router
     ) { }
 
     addUser() {
-        console.log('lies');
-        this.userService.addUser(this.user).subscribe((res) => {
-            if (res.status === 'registered') {
-                this.router.navigate(['/user', res.user._id]);
-            } else {
-                this.error = res.message;
-            }
-        });
+    //     console.log('lies');
+    //     this.userService.addUser(this.user).subscribe((res) => {
+    //         if (res.status === 'registered') {
+    //             this.router.navigate(['/user', res.user._id]);
+    //         } else {
+    //             this.error = res.message;
+    //         }
+    //     });
     }
  }
