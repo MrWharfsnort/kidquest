@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 
 import { AppComponent } from './app.component';
 
+
 //  home
 import { HomeComponent } from './home/home.component';
 
@@ -34,7 +35,7 @@ import { ChildrenDisplayComponent } from './child/children-display.component';
         BrowserModule,
         AppRoutingModule,
         FormsModule,
-        HttpModule
+        HttpModule,
     ],
     providers: [
         ApiService,

@@ -3,7 +3,6 @@ import { Child } from './child';
 import { AuthService } from '../auth.service';
 import { ApiService } from '../api.service';
 
-
 @Component({
     selector: 'add-child',
     templateUrl: './app/child/child-add.html'
@@ -12,7 +11,7 @@ export class ChildAddComponent {
 
     constructor(
         private authService: AuthService,
-        private apiService: ApiService,
+        private apiService: ApiService
         ) { }
 
     public message: string = '';
@@ -26,7 +25,6 @@ export class ChildAddComponent {
         password: '',
         parent: this.authService.user._id
     };
-
 
     private addChild() {
         console.log(this.newChild);
@@ -43,3 +41,7 @@ export class ChildAddComponent {
         });
     }
 }
+
+// todo --
+// when adding child - set message div to 'child added' and display to show
+// set interval to 2 seconds and hide again

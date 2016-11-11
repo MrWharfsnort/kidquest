@@ -166,6 +166,7 @@ app.post('/user/child', passport.authenticate("jwt", {session: false}), (req, re
                     name: req.body.name.first,
                     inventory: [],
                     credits: 0,
+                    level: 1,
                     xp: 0,
                     strength: 0,
                     wisdom: 0,

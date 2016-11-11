@@ -12,12 +12,14 @@ body {
   z-index: 2;
   box-shadow: 0 8px 16px -8px #000;
 }
+
 .jumbotron > .container > h1 {
   font-family: 'Lusitana', serif;
   font-size: 100px;
   text-shadow: 0 0 2px rgb(255, 217, 12);
   color: #fff;
 }
+
 .jumbotron > .container > h2 {
   font-family: 'Schoolbell', cursive;
   color: #fff;
@@ -25,26 +27,52 @@ body {
   font-size: 24px;
   padding: 24px;
 }
-/*
-.jumbotron > .container > h1,
-.jumbotron > .container > h2 {
-  margin: 0;
-}*/
-.navbar {
+
+.navbar-fixed-top {
   border: 0;
 }
 
-.sidebar {
-  background: rgb(75, 75, 75);
-  padding: 10px;
-  margin-top: -20px;
+@media (min-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+    background-color: rgba(0, 0, 0, 0.8);
+    border-right: 1px solid #eee;
+  }
 }
 
-.sidebar > ul {
-  padding: 0;
-  margin: 0;
+/* Sidebar navigation */
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+.nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+  color: #fff;
 }
 
+.nav-sidebar > li > a:hover,
+.nav-sidebar > li > a:focus,
+.nav-sidebar > li > a:active,
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+  color: rgb(12, 10, 0);
+  background-color: rgb(255, 217, 12);
+}
+
+.dashboard-content {
+  position: relative;
+}
 
 a {
   cursor: pointer;
@@ -61,5 +89,9 @@ a.navbar-brand {
 }
 
 a.navbar-brand:hover {
-  text-shadow: 0 0 0.5em rgb(255, 229, 87);
+  text-shadow: 0 0 0.5em rgb(255, 217, 12);
+}
+
+.child-card {
+  box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.25);
 }

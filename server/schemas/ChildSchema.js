@@ -13,6 +13,7 @@ module.exports = (mongoose, User) => {
             name: String,
             inventory: [String],
             credits: Number,
+            level: Number,
             xp: Number,
             strength: Number,
             wisdom: Number,

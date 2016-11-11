@@ -1,0 +1,25 @@
+<div class="col-md-4" *ngFor="let child of this.children">
+    <div  class="panel panel-warning child-card">
+        <div class="panel-heading"><h3 class="panel-title">{{ child.name.first }}  {{ child.name.last }}</h3></div>
+        <div class="panel-body">
+            <img class="thumbnail" src="http://placehold.it/150x150" class="avatar">
+            <h3 class="panel-title">Hero</h3>
+            <p>{{ child.hero.name }}</p>
+            <h3 class="panel-title">Progress to next level</h3>
+            <div class="row">
+                <div class="col-md-1"><span class="level">{{ child.hero.level }}</span></div>
+                <div class="col-md-9">
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
+                    </div>
+                </div>
+                <div class="col-md-1"><span class="level"{{ child.hero.level + 1 }}</span></div>
+            </div>
+            <h3 class="panel-title">Active Quests</h3>
+            <p *ngIf="!child.activeQuests.length">none</p>
+            <div *ngIf="child.activeQuests.length">
+                <p *ngFor="let quest of child.activeQuests">{{ quest }}</p>
+            </div>
+        </div>
+    </div>
+</div>

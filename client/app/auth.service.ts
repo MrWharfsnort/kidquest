@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
 
 import { Router,
-    CanActivate,
+    CanActivate, CanActivateChild,
     ActivatedRouteSnapshot,
     RouterStateSnapshot
 } from '@angular/router';
@@ -50,23 +50,18 @@ export class AuthService implements CanActivate {
     // Get the user data from the server, using the JWT
     public getUserFromServer() {
         // GET req with JWT
-        return this.apiService.getObs(
-            '/user',
-            this.getJWT()
-        ).do(
-            (res) => {
-                // On the way through, copy the user into our local var
-                if (res.status === 'success') {
-                    this.user = res.user;
-                    localStorage.setItem('jwt', res.user.jwt);
-                }
-                this.received = true;
-            },
-            (err) => {
-                // 401 not authorized.
-                this.received = true;
+        return this.apiService.getObs('/user', this.getJWT()).do((res) => {
+            // On the way through, copy the user into our local var
+            if (res.status === 'success') {
+                this.user = res.user;
+                localStorage.setItem('jwt', res.user.jwt);
             }
-        );
+            this.received = true;
+        },
+        (err) => {
+            // 401 not authorized.
+            this.received = true;
+        });
     }
 
     // Login (returns an observable) using a username and string.

@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
 
+// import { User } from '../user/user';
+
 import { ApiService } from '../api.service';
 import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'children-display',
-    template: `
-        <p>hello</p>
-        <ul>
-            <li *ngFor='let child of this.children'>{{ child.name.first }}</li>
-        </ul>
-    `
+    templateUrl: './app/child/children-display.html'
 })
 export class ChildrenDisplayComponent {
 
@@ -19,12 +16,13 @@ export class ChildrenDisplayComponent {
         private authService: AuthService
     ) { }
 
-    private children: [Object];
+    public children: Array<any>;
+    // private user: User;
 
     private getChildren() {
         this.apiService.getObs('/user/children', this.authService.getJWT()).subscribe((res) => {
-            // this.children = res.children;
-            console.log('get children => ', res);
+            this.children = [];
+
             for (let child of res.children) {
                 this.children.push(child);
             }
@@ -32,6 +30,8 @@ export class ChildrenDisplayComponent {
     }
 
     ngOnInit() {
+        // this.user = this.authService.user;
+        // this.authService.getUserFromServer();
         this.getChildren();
     }
 }
