@@ -3,4 +3,5 @@ export class User {
     password: string;
     email: string;
     _id: string;
+    jwt: string;
 }

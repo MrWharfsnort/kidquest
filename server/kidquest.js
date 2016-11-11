@@ -138,6 +138,14 @@ app.get('/user', passport.authenticate("jwt", {session: false}), (req, res) => {
             return;
         }
 
+        user = user.toObject();
+
+        user.jwt = jwt.sign({
+            _id: user._id
+        }, secret, {
+            expiresIn: 10080 // seconds
+        });
+
         res.send({status: 'success', user: user});
     });
 });

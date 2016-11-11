@@ -30,6 +30,7 @@ export class AuthService implements CanActivate {
     // stored in this.user
     // stored in localstorage
     public getJWT() {
+        console.log(this.user);
         let jwt = '';
         if (this.user && this.user.jwt) {
             jwt = this.user.jwt;
