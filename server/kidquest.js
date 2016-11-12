@@ -67,7 +67,7 @@ passport.use(new LocalStrategy(
                 user.jwt = jwt.sign({
                     _id: user._id
                 }, secret, {
-                    expiresIn: 10080 // seconds
+                    expiresIn: 604800 // 7 days (in seconds)
                 });
                 return done(null, user);
 
@@ -143,7 +143,7 @@ app.get('/user', passport.authenticate("jwt", {session: false}), (req, res) => {
         user.jwt = jwt.sign({
             _id: user._id
         }, secret, {
-            expiresIn: 10080 // seconds
+            expiresIn: 604800 // 7 days in seconds
         });
 
         res.send({status: 'success', user: user});
@@ -221,6 +221,27 @@ app.get('/user/children', passport.authenticate('jwt', {session: false}), (req, 
         }
 
         res.send({status: 'success', children: children});
+    });
+});
+
+app.post('/quest/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+    var newQuest = new Quest({
+        title: req.body.title,
+        description: req.body.description,
+        parent: req.user._id,
+        isAccepted: false,
+        isCompleted: false,
+        lootTable: []
+    });
+
+    newQuest.save(newQuest, (err, quest) => {
+        if (err) {
+            res.send({status: 'error', message: err });
+            return;
+        } else {
+            console.log('New quest created: ', quest);
+            res.send({status: 'success', message: 'quest ' + quest._id + ' added', quest: quest});
+        }
     });
 });
 

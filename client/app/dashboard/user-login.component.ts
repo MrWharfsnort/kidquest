@@ -30,7 +30,7 @@ export class UserLoginComponent {
             this.authService.login(this.userLogin.email, this.userLogin.password).subscribe((res) => {
                 if (res.status === 'success') {
                     this.authService.user = res.user;
-                    this.router.navigate(['/user', res.user._id]);
+                    this.router.navigate(['/user']);
                 } else {
                     console.log('failboat');
                 }

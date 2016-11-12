@@ -4,7 +4,6 @@ body {
 }
 
 .jumbotron {
-  height: 50%;
   margin-top: -20px;
   background: url('../img/rpgmaker.png');
   background-size: cover;

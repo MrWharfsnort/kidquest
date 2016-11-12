@@ -1,3 +1,6 @@
+<div *ngIf='!this.children' class="col-md-12 text-center">
+    <p>No children to display.  Try <a routerLink='../child/add'>adding one</a>!</p>
+</div>
 <div class="col-md-4" *ngFor="let child of this.children">
     <div class="panel panel-warning child-card">
         <div class="panel-heading">

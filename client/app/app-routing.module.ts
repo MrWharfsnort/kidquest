@@ -11,6 +11,8 @@ import { ChildAddComponent } from './child/child-add.component';
 import { ChildDisplayComponent } from './child/child-display.component';
 import { ChildrenDisplayComponent } from './child/children-display.component';
 
+import { QuestAddComponent } from './quest/add-quest.component';
+
 const routes: Routes = [
     {
         path: '',
@@ -21,13 +23,16 @@ const routes: Routes = [
         component: UserRegistrationComponent
     },
     {
-        path: 'user/:id',
+        path: 'user',
         component: UserDetailsComponent,
         canActivate: [AuthService],
         children: [
             { path: '', component: ChildrenDisplayComponent}, // TODO - default is children
             { path: 'children', component: ChildrenDisplayComponent},
-            { path: 'child/add', component: ChildAddComponent}
+            { path: 'child/add', component: ChildAddComponent},
+            { path: 'quests/add', component: QuestAddComponent},
+            { path: 'quests'},
+            { path: 'quest'}
         ]
     }
 ];
