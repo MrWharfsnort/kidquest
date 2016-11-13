@@ -15,6 +15,7 @@ export class ChildAddComponent {
         ) { }
 
     public message: string = '';
+
     private confirmPass: string;
 
     private newChild: Child = {
@@ -25,6 +26,8 @@ export class ChildAddComponent {
         password: '',
         parent: this.authService.user._id
     };
+
+
 
     private addChild() {
         console.log(this.newChild);

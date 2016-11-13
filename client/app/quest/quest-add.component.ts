@@ -7,7 +7,7 @@ import { Quest } from './quest';
 
 @Component({
     selector: 'add-quest',
-    templateUrl: './app/quest/add-quest.html'
+    templateUrl: './app/quest/quest-add.html'
 })
 export class QuestAddComponent {
 

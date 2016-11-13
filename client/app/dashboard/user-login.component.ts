@@ -13,7 +13,6 @@ export class UserLoginComponent {
     constructor(
         private authService: AuthService,
         private router: Router,
-        // private userService: UserService
     ) { }
 
     private error: string = '';

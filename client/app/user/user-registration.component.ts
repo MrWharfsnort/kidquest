@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 
 import { User } from './user';
 
+import { ApiService } from '../api.service';
+import { AuthService } from '../auth.service';
+
 @Component({
     selector: 'register-user',
     template: `
@@ -16,6 +19,12 @@ import { User } from './user';
 })
 export class UserRegistrationComponent {
 
+    constructor (
+        private router: Router,
+        private authService: AuthService,
+        private apiService: ApiService
+    ) { }
+
     private user: User = {
         name: '',
         email: '',
@@ -25,11 +34,16 @@ export class UserRegistrationComponent {
 
     private error: string = '';
 
-    constructor (
-        private router: Router
-    ) { }
 
     addUser() {
+        this.apiService.postObs('/user/register', this.user, this.authService.getJWT()).subscribe((res) => {
+            if (res.status === 'registered') {
+                this.authService.user = res.user;
+                this.router.navigate(['/user']);
+            } else {
+                this.error = res.message;
+            }
+        });
     //     console.log('lies');
     //     this.userService.addUser(this.user).subscribe((res) => {
     //         if (res.status === 'registered') {

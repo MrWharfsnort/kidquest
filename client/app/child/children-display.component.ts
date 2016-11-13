@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 
-// import { User } from '../user/user';
-
 import { ApiService } from '../api.service';
 import { AuthService } from '../auth.service';
 
@@ -16,8 +14,7 @@ export class ChildrenDisplayComponent {
         private authService: AuthService
     ) { }
 
-    public children: Array<any>;
-    // private user: User;
+    children: Array<any>;
 
     private getChildren() {
         this.apiService.getObs('/user/children', this.authService.getJWT()).subscribe((res) => {
@@ -29,9 +26,20 @@ export class ChildrenDisplayComponent {
         });
     }
 
+    private childId: string = '';
+
+    private removeChild(child) {
+        console.log('remove: ', child);
+        this.apiService.postObs('/child/delete', {_id: child._id}, this.authService.getJWT()).subscribe((res) => {
+            if (res.status === 'success') {
+                this.getChildren();
+            } else {
+                console.log('error', res.message);
+            }
+        });
+    }
+
     ngOnInit() {
-        // this.user = this.authService.user;
-        // this.authService.getUserFromServer();
         this.getChildren();
     }
 }

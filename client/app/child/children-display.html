@@ -1,7 +1,7 @@
-<div *ngIf='!this.children' class="col-md-12 text-center">
-    <p>No children to display.  Try <a routerLink='../child/add'>adding one</a>!</p>
+<div [hidden]="this.children" class="col-md-12 text-center">
+    <p>No children to display.</p>
 </div>
-<div class="col-md-4" *ngFor="let child of this.children">
+<div class="col-md-6 col-lg-4" *ngFor="let child of this.children">
     <div class="panel panel-warning child-card">
         <div class="panel-heading">
             <div class="row">
@@ -16,20 +16,46 @@
 
         <div class="panel-body">
             <div class="row">
-                <div class="col-sm-12 col-md-6 text-center">
-                    <img src="http://placehold.it/150x150" class="avatar">
+                <div class="col-sm-12 col-md-4 text-center">
+                    <img src="http://placehold.it/120x120" class="avatar">
                 </div>
-                <div class="col-sm-12 col-md-6">
-                    <p>
-                        <strong>Hero:</strong> {{ child.hero.name }}<br />
-                        <strong>XP:</strong> {{ child.hero.xp }}<br />
-                        <strong>Credits:</strong> {{ child.hero.credits }}<br />
-                        <strong>Strength:</strong> {{ child.hero.strength }}<br />
-                        <strong>Wisdom:</strong> {{ child.hero.wisdom }}<br />
-                        <strong>Kindness:</strong> {{ child.hero.kindness }}<br />
-                        <strong>Courage:</strong> {{ child.hero.courage }}<br />
-                        <strong>Responsibility:</strong> {{ child.hero.responsibility }}
-                    </p>
+                <div class="col-sm-12 col-md-8">
+                    <div class="table-responsive">
+                        <table class="table table-condensed borderless hero-stats">
+                            <tr>
+                                <td><strong>Hero:</strong></td>
+                                <td>{{ child.hero.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>XP:</strong> </td>
+                                <td>{{ child.hero.xp }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Credits:</strong> </td>
+                                <td>{{ child.hero.credits }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Strength:</strong> </td>
+                                <td>{{ child.hero.strength }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wisdom:</strong> </td>
+                                <td>{{ child.hero.wisdom }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kindness:</strong> </td>
+                                <td>{{ child.hero.kindness }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Courage:</strong> </td>
+                                <td>{{ child.hero.courage }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Responsibility:</strong>
+                                <td>{{ child.hero.responsibility }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -48,6 +74,7 @@
             <div class="row">
                 <div class="col-sm-12 text-right">
                     <button class="btn btn-warning">edit</button>
+                    <button class="btn btn-danger" (click)='removeChild(child)'>delete</button>
                 </div>
             </div>
         </div>

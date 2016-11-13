@@ -30,7 +30,8 @@ import { ChildDisplayComponent } from './child/child-display.component';
 import { ChildrenDisplayComponent } from './child/children-display.component';
 
 //  quest
-import { QuestAddComponent } from './quest/add-quest.component';
+import { QuestAddComponent } from './quest/quest-add.component';
+import { QuestsListComponent } from './quest/quest-list.component';
 
 
 @NgModule({
@@ -50,7 +51,7 @@ import { QuestAddComponent } from './quest/add-quest.component';
         UserDetailsComponent, UserRegistrationComponent, UserLoginComponent,
         NavBarComponent, SidebarComponent,
         ChildAddComponent, ChildDisplayComponent, ChildrenDisplayComponent,
-        QuestAddComponent
+        QuestAddComponent, QuestsListComponent
     ],
     bootstrap: [ AppComponent ]
 })

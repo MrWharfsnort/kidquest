@@ -11,7 +11,8 @@ import { ChildAddComponent } from './child/child-add.component';
 import { ChildDisplayComponent } from './child/child-display.component';
 import { ChildrenDisplayComponent } from './child/children-display.component';
 
-import { QuestAddComponent } from './quest/add-quest.component';
+import { QuestAddComponent } from './quest/quest-add.component';
+import { QuestsListComponent } from './quest/quest-list.component';
 
 const routes: Routes = [
     {
@@ -31,8 +32,7 @@ const routes: Routes = [
             { path: 'children', component: ChildrenDisplayComponent},
             { path: 'child/add', component: ChildAddComponent},
             { path: 'quests/add', component: QuestAddComponent},
-            { path: 'quests'},
-            { path: 'quest'}
+            { path: 'quests', component: QuestsListComponent}
         ]
     }
 ];
