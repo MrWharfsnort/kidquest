@@ -44,13 +44,5 @@ export class UserRegistrationComponent {
                 this.error = res.message;
             }
         });
-    //     console.log('lies');
-    //     this.userService.addUser(this.user).subscribe((res) => {
-    //         if (res.status === 'registered') {
-    //             this.router.navigate(['/user', res.user._id]);
-    //         } else {
-    //             this.error = res.message;
-    //         }
-    //     });
     }
  }

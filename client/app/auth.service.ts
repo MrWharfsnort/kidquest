@@ -66,7 +66,7 @@ export class AuthService implements CanActivate {
 
     // Login (returns an observable) using a username and string.
     // Stores the user in authService.user
-    public login(email: string, password: string): Observable<any> {
+    public userLogin(email: string, password: string): Observable<any> {
         return this.apiService.postObs('/user/login', {
             email: email,
             password: password

@@ -38,8 +38,8 @@ app.use(cors({
 // initialize passport
 app.use(passport.initialize());
 
-// PASSPORT JWT CONFIG
-passport.use(new JwtStrategy({
+// USER PASSPORT JWT CONFIG
+passport.use('user-jwt', new JwtStrategy({
 		jwtFromRequest: ExtractJwt.fromAuthHeader(),
     	secretOrKey: secret
 	}, function(jwt_payload, done) {
@@ -56,8 +56,8 @@ passport.use(new JwtStrategy({
     });
 }));
 
-// PASSPORT LOCALSTRATEGY CONFIG
-passport.use(new LocalStrategy(
+// USER PASSPORT LOCAL CONFIG
+passport.use('user-local', new LocalStrategy(
 	{usernameField: "email", passwordField: "password"},
 	(email, password, done) => {
 		// Replace this with User.find (mongoose)
@@ -123,7 +123,7 @@ app.post('/user/register', (req, res) => {
 });
 
 // USER LOGIN
-app.post('/user/login',	passport.authenticate("local", {session: false}), (req, res) => {
+app.post('/user/login',	passport.authenticate("user-local", {session: false}), (req, res) => {
     if (req.user) {
         res.send({status: "success", user: req.user});
     } else {
@@ -132,7 +132,7 @@ app.post('/user/login',	passport.authenticate("local", {session: false}), (req, 
 });
 
 // GET USER BY ID
-app.get('/user', passport.authenticate("jwt", {session: false}), (req, res) => {
+app.get('/user', passport.authenticate("user-jwt", {session: false}), (req, res) => {
 
     User.findById(req.user._id, (err, user) => {
         if (err) {
@@ -153,7 +153,7 @@ app.get('/user', passport.authenticate("jwt", {session: false}), (req, res) => {
 });
 
 // ADD A NEW CHILD TO USER + CHILD COLLECTION
-app.post('/user/child', passport.authenticate("jwt", {session: false}), (req, res) => {
+app.post('/user/child', passport.authenticate("user-jwt", {session: false}), (req, res) => {
     if (!req.user) {
         res.send({status: 'unauthorized', message: 'you must be logged in'});
         return;
@@ -216,7 +216,7 @@ app.post('/user/child', passport.authenticate("jwt", {session: false}), (req, re
 });
 
 // GET A LIST OF USERS' CHILDREN'
-app.get('/user/children', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/user/children', passport.authenticate('user-jwt', {session: false}), (req, res) => {
     Child.find({parent: req.user._id}, (err, children) => {
         if (err) {
             res.send({status: 'error', message: 'unable to retrieve children ' + err});
@@ -228,7 +228,7 @@ app.get('/user/children', passport.authenticate('jwt', {session: false}), (req, 
 });
 
 // DELETE A CHILD FROM USER.CHILDREN AND CHILD COLLECTION
-app.post('/child/delete', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.post('/child/delete', passport.authenticate('user-jwt', {session: false}), (req, res) => {
 
     User.findOneAndUpdate(
         { _id: req.user._id },
@@ -255,7 +255,7 @@ app.post('/child/delete', passport.authenticate('jwt', {session: false}), (req, 
 });
 
 // ADD A NEW QUEST
-app.post('/quest/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req, res) => {
 
     var statRoll = function() {
         return Math.floor((Math.random() * 3));
@@ -290,7 +290,7 @@ app.post('/quest/add', passport.authenticate('jwt', {session: false}), (req, res
 });
 
 // GET QUESTS THE USER HAS ADDED
-app.get('/user/quests', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/user/quests', passport.authenticate('user-jwt', {session: false}), (req, res) => {
     Quest.find({ parent : req.user._id }, (err, quests) => {
         if (err) {
             res.send({ status: 'error', message: 'unable to retrieve quests due to : ' + err });
@@ -301,8 +301,20 @@ app.get('/user/quests', passport.authenticate('jwt', {session: false}), (req, re
     });
 });
 
+//  HERO LOGIN
+app.post('/hero/login', (req, res) => {
+    Child.find({ "hero.name" : req.body.name, "password": req.body.password }, (err, hero) => {
+        if (err) {
+            res.send({ status: 'error', message: 'invalid user/pass combination for hero'});
+            return;
+        }
+
+        res.send({ status: 'success', hero: hero});
+    });
+});
+
 // GET QUESTS FOR THE HERO
-app.get('/hero/quests', passport.authenticate('jwt', {session: false}), (req, res) => {
+app.get('/hero/quests', (req, res) => {
     var questId = '';
 
     // Child.find({ parent: req.user.id }, {(err, child) => {

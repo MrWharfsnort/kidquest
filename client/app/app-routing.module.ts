@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { ChildAddComponent } from './child/child-add.component';
 import { ChildDisplayComponent } from './child/child-display.component';
 import { ChildrenDisplayComponent } from './child/children-display.component';
+import { ChildLoginComponent } from './child/child-login.component';
 
 import { QuestAddComponent } from './quest/quest-add.component';
 import { QuestsListComponent } from './quest/quest-list.component';
@@ -34,6 +35,14 @@ const routes: Routes = [
             { path: 'quests/add', component: QuestAddComponent},
             { path: 'quests', component: QuestsListComponent}
         ]
+    },
+    {
+        path: 'hero/login',
+        component: ChildLoginComponent
+    },
+    {
+        path: 'hero/details',
+        component: ChildDisplayComponent
     }
 ];
 

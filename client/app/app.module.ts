@@ -28,6 +28,7 @@ import { SidebarComponent } from './dashboard/sidebar.component';
 import { ChildAddComponent } from './child/child-add.component';
 import { ChildDisplayComponent } from './child/child-display.component';
 import { ChildrenDisplayComponent } from './child/children-display.component';
+import { ChildLoginComponent } from './child/child-login.component';
 
 //  quest
 import { QuestAddComponent } from './quest/quest-add.component';
@@ -50,7 +51,7 @@ import { QuestsListComponent } from './quest/quest-list.component';
         HomeComponent,
         UserDetailsComponent, UserRegistrationComponent, UserLoginComponent,
         NavBarComponent, SidebarComponent,
-        ChildAddComponent, ChildDisplayComponent, ChildrenDisplayComponent,
+        ChildAddComponent, ChildDisplayComponent, ChildrenDisplayComponent, ChildLoginComponent,
         QuestAddComponent, QuestsListComponent
     ],
     bootstrap: [ AppComponent ]
