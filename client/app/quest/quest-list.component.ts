@@ -26,6 +26,8 @@ export class QuestsListComponent {
             for (let quest of res.quests) {
                 this.quests.push(quest);
             }
+
+            this.quests.reverse();
         });
     }
 

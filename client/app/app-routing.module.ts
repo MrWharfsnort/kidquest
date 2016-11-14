@@ -4,11 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { UserDetailsComponent } from './user/user-details.component';
 import { UserRegistrationComponent } from './user/user-registration.component';
-import { UserLoginComponent } from './dashboard/user-login.component';
+import { UserLoginComponent } from './user/user-login.component';
 import { AuthService } from './auth.service';
 
 import { ChildAddComponent } from './child/child-add.component';
-import { ChildDisplayComponent } from './child/child-display.component';
+import { ChildCardComponent } from './child/child-card.component';
 import { ChildrenDisplayComponent } from './child/children-display.component';
 import { ChildLoginComponent } from './child/child-login.component';
 
@@ -42,7 +42,7 @@ const routes: Routes = [
     },
     {
         path: 'hero/details',
-        component: ChildDisplayComponent
+        component: ChildCardComponent
     }
 ];
 

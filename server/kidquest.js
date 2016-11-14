@@ -40,21 +40,42 @@ app.use(passport.initialize());
 
 // USER PASSPORT JWT CONFIG
 passport.use('user-jwt', new JwtStrategy({
-		jwtFromRequest: ExtractJwt.fromAuthHeader(),
-    	secretOrKey: secret
-	}, function(jwt_payload, done) {
+    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    secretOrKey: secret
+	},function(jwt_payload, done) {
+        User.findOne(
+            { _id: jwt_payload._id },
+            (err, user) => {
+                if (err) {
+                    done(err, false);
+                } else if (user) {
+                    done(null, user);
+                } else {
+                    done(null, false);
+                }
+            }
+        );
+    })
+);
 
-	// replace this with User.find (mongoose)
-	User.findOne({_id: jwt_payload._id}, (err, user) => {
-        if (err) {
-            done(err, false);
-        } else if (user) {
-            done(null, user);
-        } else {
-            done(null, false);
-        }
-    });
-}));
+passport.use('child-jwt', new JwtStrategy({
+    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    secretOrKey: secret
+    }, function(jwt_payload, done) {
+        Child.findOne(
+            { _id: jwt_payload._id },
+            (err, hero) => {
+                if (err) {
+                    done(err, false);
+                } else if (hero) {
+                    done(null, user);
+                } else {
+                    done(null, false);
+                }
+            }
+        );
+    })
+);
 
 // USER PASSPORT LOCAL CONFIG
 passport.use('user-local', new LocalStrategy(
@@ -258,7 +279,7 @@ app.post('/child/delete', passport.authenticate('user-jwt', {session: false}), (
 app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req, res) => {
 
     var statRoll = function() {
-        return Math.floor((Math.random() * 3));
+        return Math.floor((Math.random() * 1));
     };
 
     var newQuest = new Quest({
@@ -308,7 +329,6 @@ app.post('/hero/login', (req, res) => {
             res.send({ status: 'error', message: 'invalid user/pass combination for hero'});
             return;
         }
-
         res.send({ status: 'success', hero: hero});
     });
 });

@@ -28,15 +28,19 @@ export class ChildrenDisplayComponent {
 
     private childId: string = '';
 
-    private removeChild(child) {
-        console.log('remove: ', child);
-        this.apiService.postObs('/child/delete', {_id: child._id}, this.authService.getJWT()).subscribe((res) => {
-            if (res.status === 'success') {
-                this.getChildren();
-            } else {
-                console.log('error', res.message);
+    private removeChild(hero) {
+        console.log('children array => ', this.children);
+        console.log('remove => ', hero);
+        this.apiService.postObs('/child/delete',
+            { _id: hero._id },
+            this.authService.getJWT()).subscribe((res) => {
+                if (res.status === 'success') {
+                    this.getChildren();
+                } else {
+                    console.log('error', res.message);
+                }
             }
-        });
+        );
     }
 
     ngOnInit() {

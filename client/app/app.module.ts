@@ -18,7 +18,7 @@ import { HomeComponent } from './home/home.component';
 //  user
 import { UserDetailsComponent } from './user/user-details.component';
 import { UserRegistrationComponent } from './user/user-registration.component';
-import { UserLoginComponent } from './dashboard/user-login.component';
+import { UserLoginComponent } from './user/user-login.component';
 
 //  dashboard
 import { NavBarComponent } from './dashboard/navbar.component';
@@ -26,7 +26,7 @@ import { SidebarComponent } from './dashboard/sidebar.component';
 
 // child
 import { ChildAddComponent } from './child/child-add.component';
-import { ChildDisplayComponent } from './child/child-display.component';
+import { ChildCardComponent } from './child/child-card.component';
 import { ChildrenDisplayComponent } from './child/children-display.component';
 import { ChildLoginComponent } from './child/child-login.component';
 
@@ -51,7 +51,7 @@ import { QuestsListComponent } from './quest/quest-list.component';
         HomeComponent,
         UserDetailsComponent, UserRegistrationComponent, UserLoginComponent,
         NavBarComponent, SidebarComponent,
-        ChildAddComponent, ChildDisplayComponent, ChildrenDisplayComponent, ChildLoginComponent,
+        ChildAddComponent, ChildCardComponent, ChildrenDisplayComponent, ChildLoginComponent,
         QuestAddComponent, QuestsListComponent
     ],
     bootstrap: [ AppComponent ]

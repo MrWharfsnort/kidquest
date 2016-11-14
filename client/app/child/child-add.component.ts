@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Child } from './child';
 import { AuthService } from '../auth.service';
 import { ApiService } from '../api.service';
@@ -11,7 +12,8 @@ export class ChildAddComponent {
 
     constructor(
         private authService: AuthService,
-        private apiService: ApiService
+        private apiService: ApiService,
+        private router: Router
         ) { }
 
     public message: string = '';
@@ -38,6 +40,7 @@ export class ChildAddComponent {
                 this.newChild.name.last = '';
                 this.newChild.password = '';
                 this.confirmPass = '';
+                this.router.navigate(['/user/children']);
             } else {
                 console.log('inconceivable - no child added.');
             }
