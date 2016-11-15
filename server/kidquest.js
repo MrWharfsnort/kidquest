@@ -312,6 +312,8 @@ app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req
         parent: req.user._id,
         isAccepted: false,
         isCompleted: false,
+        isAvailable: true,
+        isVerified: false,
         lootTable: [],
         rewards: {
             strength: statRoll(),
