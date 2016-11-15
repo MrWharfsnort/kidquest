@@ -2,7 +2,7 @@
         <div class="panel-heading">
             <div class="panel-title">
                 {{ quest.title }}
-                <div class="quest-notifications">
+                <div class="quest-notifications" *ngIf="authService.user">
                     <small>
                         <span class="label label-danger" *ngIf="!quest.isAccepted">available</span>
                         <span class="label label-success" *ngIf="quest.isAccepted">quest accepted</span>
@@ -31,12 +31,19 @@
             </div>
             <div class="row" *ngIf="authService.user">
                 <div class="col-xs-12 text-right">
-                    <button class="btn btn-sm btn-danger" [disabled]="!quest.isComplete">delete</button>
+                    <button class="btn btn-sm btn-danger"
+                        (click)="delete.emit()"
+                    >delete</button>
                 </div>
             </div>
            <div class="row" *ngIf="authService.hero">
                 <div class="col-xs-12 text-right">
-                    <button class="btn btn-sm btn-danger" [disabled]="!quest.isComplete">complete</button>
+                    <button class="btn btn-sm btn-success"
+                        [hidden]="!quest.isAccepted"
+                    >accept quest</button>
+                    <button class="btn btn-sm btn-danger"
+                        [hidden]="quest.isAccepted"
+                    >complete quest</button>
                 </div>
             </div>
         </div>

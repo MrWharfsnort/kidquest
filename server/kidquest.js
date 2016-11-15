@@ -334,6 +334,21 @@ app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req
     });
 });
 
+app.post('/quest/delete', passport.authenticate('user-jwt', {session: false}), (req, res) => {
+    Quest.remove(
+        { _id: req.body._id},
+        (err, data) => {
+            if (err) {
+                res.send({status: 'error', message: err});
+                return;
+            } else {
+                res.send({status: 'success', message: 'quest removed'});
+            }
+        }
+    );
+
+});
+
 // GET QUESTS THE USER HAS ADDED
 app.get('/user/quests', passport.authenticate('user-jwt', {session: false}), (req, res) => {
     Quest.find({ parent : req.user._id }, (err, quests) => {
@@ -381,9 +396,9 @@ app.get('/hero', passport.authenticate("child-jwt", {session: false}), (req, res
 // GET QUESTS FOR THE HERO
 app.get('/hero/quests/available', passport.authenticate('child-jwt', {session:false}), (req, res) => {
     if (req.hero) {
-        console.log('fetching quests for hero: ', req.hero);
+        console.log('fetching quests for hero: ', req.hero.name);
     } else if (req.user) {
-        console.log('fetching quests for user: ', req.user);
+        console.log('fetching quests for user: ', req.user.name);
     }
 
     Quest.find(

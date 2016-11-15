@@ -36,6 +36,18 @@ export class QuestService {
         });
     }
 
+    public deleteQuest(quest) {
+        console.log('delete quest: ', quest._id);
+        this.apiService.postObs('/quest/delete', { _id: quest._id }, this.authService.getJWT()).subscribe((res) => {
+            if (res.status === 'success') {
+                console.log(res.message);
+                this.getQuests();
+            } else {
+                console.log(res.message);
+            }
+        });
+    }
+
     public createQuest() {
         console.log('new quest: ', this.newQuest);
         this.apiService.postObs('/quest/add', this.newQuest, this.authService.getJWT()).subscribe((res) => {

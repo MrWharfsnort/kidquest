@@ -2,5 +2,6 @@
     <quest-card
         *ngFor="let quest of questService.quests"
         [quest]="quest"
+        (delete)="questService.deleteQuest(quest)"
     ></quest-card>
 </div>
