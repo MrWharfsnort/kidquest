@@ -1,6 +1,7 @@
 body {
   padding-top: 70px;
   background: url('../img/groovepaper.png');
+  /*font-family: monospace;*/
 }
 
 .jumbotron {

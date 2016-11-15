@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 
 import { HeroCardComponent } from '../hero/hero-card.component';
+import { QuestsListComponent } from '../quest/quest-list.component';
 
 @Component({
     selector: 'hero-details',
-    template: '<hero-card></hero-card>'
+    templateUrl: './app/hero/hero-details.html'
 })
 
 export class HeroDetailsComponent { }

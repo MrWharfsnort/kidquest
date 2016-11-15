@@ -29,8 +29,8 @@ export class ChildrenDisplayComponent {
     private childId: string = '';
 
     private removeChild(hero) {
-        console.log('children array => ', this.children);
-        console.log('remove => ', hero);
+        // console.log('children array => ', this.children);
+        // console.log('remove => ', hero);
         this.apiService.postObs('/child/delete',
             { _id: hero._id },
             this.authService.getJWT()).subscribe((res) => {

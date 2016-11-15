@@ -33,6 +33,7 @@ import { ChildLoginComponent } from './child/child-login.component';
 //  quest
 import { QuestAddComponent } from './quest/quest-add.component';
 import { QuestsListComponent } from './quest/quest-list.component';
+import { QuestCardComponent } from './quest/quest-card.component';
 
 //  hero
 import { HeroDetailsComponent } from './hero/hero-details.component';
@@ -56,7 +57,7 @@ import { HeroCardComponent } from './hero/hero-card.component';
         UserDetailsComponent, UserRegistrationComponent, UserLoginComponent,
         NavBarComponent, SidebarComponent,
         ChildAddComponent, ChildCardComponent, ChildrenDisplayComponent, ChildLoginComponent,
-        QuestAddComponent, QuestsListComponent,
+        QuestAddComponent, QuestsListComponent, QuestCardComponent,
         HeroDetailsComponent, HeroCardComponent
     ],
     bootstrap: [ AppComponent ]
