@@ -12,9 +12,9 @@
         <div id="navbar" class="navbar-collapse collapse navbar-right">
 
             <!--<user-login></user-login>-->
-            <ul *ngIf='this.authService.user' class='nav navbar-nav navbar-right'>
-                <li><a routerLink='/user'><span class='glyphicon glyphicon-user'></span> {{ this.authService.user.name }}</a></li>
-                <li><a (click)=this.authService.logout()><span class='glyphicon glyphicon-log-out'></span> Logout</a></li>
+            <ul *ngIf='authService.user' class='nav navbar-nav navbar-right'>
+                <li><a routerLink='/user'><span class='glyphicon glyphicon-user'></span> {{ authService.user.name }}</a></li>
+                <li><a (click)=authService.logout()><span class='glyphicon glyphicon-log-out'></span> Logout</a></li>
             </ul>
         </div>
     </div>

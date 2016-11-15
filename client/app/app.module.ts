@@ -34,6 +34,7 @@ import { ChildLoginComponent } from './child/child-login.component';
 import { QuestAddComponent } from './quest/quest-add.component';
 import { QuestsListComponent } from './quest/quest-list.component';
 import { QuestCardComponent } from './quest/quest-card.component';
+import { QuestService } from './quest/quest.service';
 
 //  hero
 import { HeroDetailsComponent } from './hero/hero-details.component';
@@ -49,7 +50,8 @@ import { HeroCardComponent } from './hero/hero-card.component';
     ],
     providers: [
         ApiService,
-        AuthService
+        AuthService,
+        QuestService
     ],
     declarations: [
         AppComponent,

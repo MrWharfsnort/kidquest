@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ApiService } from '../api.service';
 import { AuthService } from '../auth.service';
+import { QuestService } from './quest.service';
 
 import { Quest } from './quest';
 
@@ -13,9 +14,11 @@ export class QuestCardComponent {
 
     constructor(
         private apiService: ApiService,
-        private authService: AuthService
+        private authService: AuthService,
+        private questService: QuestService
     ) { }
 
     @Input()
         quest: Quest;
+
 }

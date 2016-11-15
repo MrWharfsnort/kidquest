@@ -3,6 +3,9 @@
         <hero-card></hero-card>
     </div>
     <div class="col-md-8">
-        quest list
+        <quest-card
+            *ngFor="let quest of questService.quests"
+            [quest]=quest
+        ></quest-card>
     </div>
 </div>

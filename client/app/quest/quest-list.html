@@ -1,6 +1,6 @@
-<div class="col-lg-12" *ngFor="let quest of quests">
+<div class="col-lg-12">
     <quest-card
-        *ngFor="let quest of this.quests"
+        *ngFor="let quest of questService.quests"
         [quest]="quest"
     ></quest-card>
 </div>
