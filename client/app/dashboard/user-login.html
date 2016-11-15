@@ -1,6 +1,0 @@
-<form *ngIf='!this.authService.user' class='navbar-form navbar-right'>
-        <input type='email' [(ngModel)]='userLogin.email' class='form-control' name='email' placeholder='email address'>
-        <input type='password' [(ngModel)]='userLogin.password' class='form-control' name='password' placeholder='password'>
-        <button class='btn btn-default' (click)=submitLogin()>log in</button>
-        <p class='text-danger' *ngIf='error'>{{ error }}</p>
-</form>

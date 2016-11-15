@@ -1,5 +1,6 @@
 /* jshint esversion: 6 */
 
+// SET GLOBALS
 var express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
@@ -20,13 +21,13 @@ var express = require('express'),
 
 var secret = 't67uhy78iju3hy2748tritj42hy8w';
 
-
 // this silences the error about mongo's mpromise library
 mongoose.Promise = global.Promise;
+
 //  connect to mongo
 mongoose.connect("mongodb://localhost");
 
-//  basic config for body-parser
+//  BODY-PARSER CONFIG
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors({
@@ -37,40 +38,41 @@ app.use(cors({
 // initialize passport
 app.use(passport.initialize());
 
-// set up JWT strat
-passport.use(new JwtStrategy({
-		jwtFromRequest: ExtractJwt.fromAuthHeader(),
-    	secretOrKey: secret
-	}, function(jwt_payload, done) {
+// USER PASSPORT JWT CONFIG
+passport.use('user-jwt', new JwtStrategy({
+    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    secretOrKey: secret
+	},function(jwt_payload, done) {
+        User.findOne(
+            { _id: jwt_payload._id },
+            (err, user) => {
+                if (err) {
+                    done(err, false);
+                } else if (user) {
+                    done(null, user);
+                } else {
+                    done(null, false);
+                }
+            }
+        );
+    })
+);
 
-	// replace this with User.find (mongoose)
-	User.findOne({_id: jwt_payload._id}, (err, user) => {
-        if (err) {
-            done(err, false);
-        } else if (user) {
-            done(null, user);
-        } else {
-            done(null, false);
-        }
-    });
-}));
-
-// Set up username/pw strat
-passport.use(new LocalStrategy(
+// USER PASSPORT LOCAL CONFIG
+passport.use('user-local', new LocalStrategy(
 	{usernameField: "email", passwordField: "password"},
 	(email, password, done) => {
-		// Replace this with User.find (mongoose)
-		User.findOne({ email: email, password: password}, (err, user) => {
+		User.findOne(
+            { email: email, password: password},
+            (err, user) => {
             if (user) {
                 user = user.toObject();
 
-                user.jwt = jwt.sign({
-                    _id: user._id
-                }, secret, {
-                    expiresIn: 604800 // 7 days (in seconds)
-                });
+                user.jwt = jwt.sign(
+                    { _id: user._id }, secret,
+                    { expiresIn: 604800 }
+                );
                 return done(null, user);
-
             } else {
                 return done(null, false, {message: "Incorrect username or password" });
             }
@@ -78,7 +80,51 @@ passport.use(new LocalStrategy(
 	}
 ));
 
-// user registration
+//  CHILD PASSPORT JWT CONFIG
+passport.use('child-jwt', new JwtStrategy({
+    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    secretOrKey: secret
+    }, function(jwt_payload, done) {
+        Child.findOne(
+            { _id: jwt_payload._id },
+            (err, hero) => {
+                if (err) {
+                    done(err, false);
+                } else if (hero) {
+                    done(null, hero);
+                } else {
+                    done(null, false);
+                }
+            }
+        );
+    })
+);
+
+//  CHILD PASSPORT LOCAL CONFIG
+passport.use('child-local', new LocalStrategy(
+    {usernameField: "name", passwordField: "password"},
+    (name, password, done) => {
+        Child.findOne(
+            { "hero.name": name, "password": password },
+            (err, hero) => {
+                // console.log('hero login found:', hero);
+                if (hero) {
+                    hero = hero.toObject();
+
+                    hero.jwt = jwt.sign(
+                        { _id: hero._id }, secret,
+                        { expiresIn: 604800 }
+                    );
+                    return done(null, hero);
+                } else {
+                    return done(null, false, { message: 'Incorrect X hero name or password' });
+                }
+            }
+        );
+    }
+));
+
+// USER REGISTRATION
 app.post('/user/register', (req, res) => {
     // check to see if email already exists in database
     User.find({email: req.body.email}, (err, email) => {
@@ -90,6 +136,7 @@ app.post('/user/register', (req, res) => {
                 type: 'parent',
                 children: []
             });
+
             // if no user exists, save new user to database
             newUser.save((err) => {
                 // handle errors on save, just in case
@@ -99,14 +146,15 @@ app.post('/user/register', (req, res) => {
                     return;
                 }
 
+                newUser = newUser.toObject();
+
                 newUser.jwt = jwt.sign({
                     _id: newUser._id
                 }, secret, {
-                    expiresIn: 10080 // seconds
+                    expiresIn: 604800 // 7 days in seconds
                 });
 
                 console.info('User ' + req.body.name + ' added');
-                // req.session.user = newUser._id;
                 res.send({status: 'registered',
                     user: newUser
                 });
@@ -119,8 +167,8 @@ app.post('/user/register', (req, res) => {
     });
 });
 
-// user login
-app.post('/user/login',	passport.authenticate("local", {session: false}), (req, res) => {
+// USER LOGIN
+app.post('/user/login',	passport.authenticate("user-local", {session: false}), (req, res) => {
     if (req.user) {
         res.send({status: "success", user: req.user});
     } else {
@@ -128,9 +176,8 @@ app.post('/user/login',	passport.authenticate("local", {session: false}), (req, 
     }
 });
 
-
-// get user by id
-app.get('/user', passport.authenticate("jwt", {session: false}), (req, res) => {
+// GET USER BY ID
+app.get('/user', passport.authenticate("user-jwt", {session: false}), (req, res) => {
 
     User.findById(req.user._id, (err, user) => {
         if (err) {
@@ -150,8 +197,8 @@ app.get('/user', passport.authenticate("jwt", {session: false}), (req, res) => {
     });
 });
 
-
-app.post('/user/child', passport.authenticate("jwt", {session: false}), (req, res) => {
+// ADD A NEW CHILD TO USER + CHILD COLLECTION
+app.post('/user/child', passport.authenticate("user-jwt", {session: false}), (req, res) => {
     if (!req.user) {
         res.send({status: 'unauthorized', message: 'you must be logged in'});
         return;
@@ -195,15 +242,15 @@ app.post('/user/child', passport.authenticate("jwt", {session: false}), (req, re
                 var childId = child._id;
 
                 User.findOneAndUpdate(
-                    {_id: req.user._id},
-                    {$push: {children: childId}},
+                    { _id: req.user._id },
+                    { $push: { children: childId } },
                     {new: true},
                     (err, data) => {
                         if (err) {
                             console.log('Unable to add child to user', err);
                             return;
                         } else {
-                            console.log('Child ' + childId + ' added to user ' + req.user);
+                            console.log('Child ' + childId + ' added');
                             res.send({status: 'success', newChild: child});
                         }
                     }
@@ -213,7 +260,8 @@ app.post('/user/child', passport.authenticate("jwt", {session: false}), (req, re
     });
 });
 
-app.get('/user/children', passport.authenticate('jwt', {session: false}), (req, res) => {
+// GET A LIST OF USERS' CHILDREN'
+app.get('/user/children', passport.authenticate('user-jwt', {session: false}), (req, res) => {
     Child.find({parent: req.user._id}, (err, children) => {
         if (err) {
             res.send({status: 'error', message: 'unable to retrieve children ' + err});
@@ -224,14 +272,55 @@ app.get('/user/children', passport.authenticate('jwt', {session: false}), (req, 
     });
 });
 
-app.post('/quest/add', passport.authenticate('jwt', {session: false}), (req, res) => {
+// DELETE A CHILD FROM USER.CHILDREN AND CHILD COLLECTION
+app.post('/child/delete', passport.authenticate('user-jwt', {session: false}), (req, res) => {
+
+    User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $pull: { "children": req.body._id } },
+        { new: true},
+        (err, done) => {
+            if (err) {
+                console.log('error removing kid', err);
+                return;
+            } else {
+                console.log(done);
+            }
+        }
+    );
+
+    Child.remove({_id: req.body._id}, (err, data) => {
+        if (err) {
+            res.send({status: 'error', message: err});
+        } else {
+            res.send({status: 'success', message: 'child removed'});
+        }
+    });
+
+});
+
+// ADD A NEW QUEST
+app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req, res) => {
+
+    var statRoll = function() {
+        return Math.floor((Math.random() * 2));
+    };
+
     var newQuest = new Quest({
         title: req.body.title,
         description: req.body.description,
         parent: req.user._id,
         isAccepted: false,
         isCompleted: false,
-        lootTable: []
+        lootTable: [],
+        rewards: {
+            strength: statRoll(),
+            wisdom: statRoll(),
+            kindness: statRoll(),
+            courage: statRoll(),
+            responsibility: statRoll()
+        }
+
     });
 
     newQuest.save(newQuest, (err, quest) => {
@@ -242,6 +331,66 @@ app.post('/quest/add', passport.authenticate('jwt', {session: false}), (req, res
             console.log('New quest created: ', quest);
             res.send({status: 'success', message: 'quest ' + quest._id + ' added', quest: quest});
         }
+    });
+});
+
+// GET QUESTS THE USER HAS ADDED
+app.get('/user/quests', passport.authenticate('user-jwt', {session: false}), (req, res) => {
+    Quest.find({ parent : req.user._id }, (err, quests) => {
+        if (err) {
+            res.send({ status: 'error', message: 'unable to retrieve quests due to : ' + err });
+            return;
+        }
+
+        res.send({ status: 'success', quests: quests });
+    });
+});
+
+//  HERO LOGIN
+app.post('/hero/login', passport.authenticate('child-local', {session:false}), (req, res) => {
+    if (req.user) {
+        res.send({status: 'success', hero: req.user});
+    } else {
+        res.send({ status: 'error', message: 'incorrect login/password'});
+    }
+
+});
+
+// GET HERO BY ID
+app.get('/hero', passport.authenticate("child-jwt", {session: false}), (req, res) => {
+
+    Child.findById(req.user._id,
+        (err, hero) => {
+        if (err) {
+            res.send({status: 'error', message: 'err'});
+            return;
+        }
+
+        hero = hero.toObject();
+
+        hero.jwt = jwt.sign({
+            _id: hero._id
+        }, secret, {
+            expiresIn: 604800 // 7 days in seconds
+        });
+
+        res.send({status: 'success', data: hero});
+    });
+});
+
+// GET QUESTS FOR THE HERO
+app.get('/hero/quests/available', passport.authenticate('child-jwt', {session:false}), (req, res) => {
+    var questId = '';
+
+    Quest.find(
+        { "parent": req.user.parent },
+        (err, quests) => {
+        if (err) {
+            res.send({ status: 'error', message: 'unable to retrieve quests due to : ' + err });
+            return;
+        }
+
+        res.send({ status: 'success', quests: quests });
     });
 });
 

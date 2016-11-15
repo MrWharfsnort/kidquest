@@ -16,6 +16,8 @@ export class AuthService implements CanActivate {
     // User object for storing the current active user
     // undefined if not logged in
     public user: any;
+    public hero: any;
+    public type: string;
 
     // Whether we've already received the user data from the server,
     // or if we're still waiting for that.
@@ -38,6 +40,8 @@ export class AuthService implements CanActivate {
         }
         return jwt;
     }
+
+
 
     // No need to touch the server. Just lose our local data
     // and we're already logged out.
@@ -66,7 +70,7 @@ export class AuthService implements CanActivate {
 
     // Login (returns an observable) using a username and string.
     // Stores the user in authService.user
-    public login(email: string, password: string): Observable<any> {
+    public userLogin(email: string, password: string): Observable<any> {
         return this.apiService.postObs('/user/login', {
             email: email,
             password: password
@@ -84,6 +88,58 @@ export class AuthService implements CanActivate {
         );
     }
 
+    public getHeroJWT() {
+        let jwt = '';
+
+        if (this.hero && this.hero.jwt) {
+            jwt = this.hero.jwt;
+        } else if (localStorage.getItem('jwt')) {
+            jwt = localStorage.getItem('jwt');
+        }
+
+        return jwt;
+    }
+
+    public getHeroFromServer() {
+        // GET req with JWT
+        return this.apiService.getObs('/hero', this.getHeroJWT()).do((res) => {
+            if (res.status === 'success') {
+                this.hero = res.hero;
+                localStorage.setItem('jwt', res.hero.jwt);
+            }
+            this.received = true;
+        },
+        (err) => {
+            // 401 not authorized.
+            this.received = true;
+        });
+    }
+
+    public heroLogout() {
+        localStorage.removeItem('jwt');
+        this.hero = undefined;
+        this.router.navigate(['/']);
+    }
+
+    public heroLogin(name: string, password: string): Observable<any> {
+        return this.apiService.postObs('/hero/login', {
+            name: name,
+            password: password
+        }).do((res) => {
+            // console.log('auth service response: ', res);
+            // console.log('auth service hero: ', res.hero);
+            if (res.status === 'success') {
+                this.hero = res.hero;
+                localStorage.setItem('jwt', res.hero.jwt);
+            }
+
+            this.received = true;
+        },
+        (err) => {
+            console.log('error logging in: ', err);
+        });
+    }
+
     // Magic
     public canActivate(
         route: ActivatedRouteSnapshot,
@@ -91,7 +147,7 @@ export class AuthService implements CanActivate {
     ): Observable<boolean> {
         return new Observable<boolean>((observer) => {
             if (this.received) {
-                if (this.user) {
+                if (this.hero) {
                     observer.next(true);
                     observer.complete();
                     return;
@@ -102,7 +158,17 @@ export class AuthService implements CanActivate {
                     return;
                 }
             } else {
-                this.getUserFromServer().subscribe((res) => {
+                // if (!this.user && !this.hero) {
+                //     this.getUserFromServer().subscribe((res) => {
+                //         observer.next(res.status === 'success');
+                //         observer.complete();
+                //     }, (err) => {
+                //         observer.next(false);
+                //         this.router.navigate(['/']);
+                //         observer.complete();
+                //     });
+                //     return;
+                    this.getHeroFromServer().subscribe((res) => {
                     observer.next(res.status === 'success');
                     observer.complete();
                 }, (err) => {

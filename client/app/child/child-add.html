@@ -1,7 +1,8 @@
 <div class="col-md-7">
-    <div class="panel panel-default">
+    <div class="panel panel-warning">
         <div class="panel-heading"><h3 class="panel-title">Add Child</h3></div>
         <div class="panel-body">
+            <div *ngIf="message" class="alert alert-success" role="alert">{{ message }}</div>
             <form class="form-horizontal">
                 <div class="form-group">
                     <label for="childName" class="col-sm-2 control-label text-right">Name</label>
@@ -49,11 +50,10 @@
                             >
                     </div>
                 </div>
-            <button class="btn btn-default pull-right"
-                type="submit"
+            </form>
+            <button class="btn btn-success pull-right"
                 (click)='addChild()'
                 >add child</button>
-            </form>
         </div>
     </div>
 </div>

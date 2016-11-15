@@ -4,14 +4,18 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { UserDetailsComponent } from './user/user-details.component';
 import { UserRegistrationComponent } from './user/user-registration.component';
-import { UserLoginComponent } from './dashboard/user-login.component';
+import { UserLoginComponent } from './user/user-login.component';
 import { AuthService } from './auth.service';
 
 import { ChildAddComponent } from './child/child-add.component';
-import { ChildDisplayComponent } from './child/child-display.component';
+import { ChildCardComponent } from './child/child-card.component';
 import { ChildrenDisplayComponent } from './child/children-display.component';
+import { ChildLoginComponent } from './child/child-login.component';
 
-import { QuestAddComponent } from './quest/add-quest.component';
+import { QuestAddComponent } from './quest/quest-add.component';
+import { QuestsListComponent } from './quest/quest-list.component';
+
+import { HeroDetailsComponent } from './hero/hero-details.component';
 
 const routes: Routes = [
     {
@@ -31,9 +35,13 @@ const routes: Routes = [
             { path: 'children', component: ChildrenDisplayComponent},
             { path: 'child/add', component: ChildAddComponent},
             { path: 'quests/add', component: QuestAddComponent},
-            { path: 'quests'},
-            { path: 'quest'}
+            { path: 'quests', component: QuestsListComponent}
         ]
+    },
+    {
+        path: 'hero',
+        canActivate: [AuthService],
+        component: HeroDetailsComponent
     }
 ];
 
@@ -42,15 +50,3 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 export class AppRoutingModule { }
-
-
-// UserDetailComponent
-// UserLoginComponent
-// UserRegistrationComponent
-// HeroDetailsComponent
-// HeroAddComponent
-// ChildViewComponent
-// ChildRegistrationComponent
-// QuestDetailsComponent
-// QuestCardComponent
-// QuestAddComponent

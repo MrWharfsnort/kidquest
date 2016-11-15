@@ -1,0 +1,80 @@
+<div class="col-md-6 col-lg-4">
+    <div class="panel panel-warning child-card">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h3 class="panel-title">{{ child.name.first }}  {{ child.name.last }}</h3>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <span class="level-badge text-right">Level: {{ child.hero.level }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-12 col-md-4 text-center">
+                    <img src="http://placehold.it/120x120" class="avatar">
+                </div>
+                <div class="col-sm-12 col-md-8">
+                    <div class="table-responsive">
+                        <table class="table table-condensed borderless hero-stats">
+                            <tr>
+                                <td><strong>Hero:</strong></td>
+                                <td>{{ child.hero.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>XP:</strong> </td>
+                                <td>{{ child.hero.xp }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Credits:</strong> </td>
+                                <td>{{ child.hero.credits }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Strength:</strong> </td>
+                                <td>{{ child.hero.strength }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wisdom:</strong> </td>
+                                <td>{{ child.hero.wisdom }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Kindness:</strong> </td>
+                                <td>{{ child.hero.kindness }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Courage:</strong> </td>
+                                <td>{{ child.hero.courage }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Responsibility:</strong>
+                                <td>{{ child.hero.responsibility }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="panel-title">Progress to next level</h3>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 10%"></div>
+                    </div>
+                    <h3 class="panel-title">Active Quests</h3>
+                    <p *ngIf="!child.activeQuests.length">none</p>
+                    <div *ngIf="child.activeQuests.length">
+                        <p *ngFor="let quest of child.activeQuests">{{ quest }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <button class="btn btn-warning">edit</button>
+                    <button class="btn btn-danger"
+                        (click)='remove.emit()'>delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,7 +5,7 @@ import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'user-login',
-    templateUrl: './app/dashboard/user-login.html'
+    templateUrl: './app/user/user-login.html'
 
 })
 export class UserLoginComponent {
@@ -13,7 +13,6 @@ export class UserLoginComponent {
     constructor(
         private authService: AuthService,
         private router: Router,
-        // private userService: UserService
     ) { }
 
     private error: string = '';
@@ -27,7 +26,7 @@ export class UserLoginComponent {
         if (this.userLogin.email.length === 0) {
             this.error = 'username cannot be empty';
         } else {
-            this.authService.login(this.userLogin.email, this.userLogin.password).subscribe((res) => {
+            this.authService.userLogin(this.userLogin.email, this.userLogin.password).subscribe((res) => {
                 if (res.status === 'success') {
                     this.authService.user = res.user;
                     this.router.navigate(['/user']);

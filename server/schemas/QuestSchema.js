@@ -7,7 +7,15 @@ module.exports = (mongoose, LootItem) => {
         parent: String,
         isAccepted: Boolean,
         isCompleted: Boolean,
-        lootTable: [String]
+        isVerified: Boolean,
+        lootTable: [String],
+        rewards: {
+            strength: Number,
+            wisdom: Number,
+            kindness: Number,
+            courage: Number,
+            responsibility: Number
+        }
     });
 
     var Quest = mongoose.model('Quest', QuestSchema);
