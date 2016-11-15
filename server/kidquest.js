@@ -58,6 +58,29 @@ passport.use('user-jwt', new JwtStrategy({
     })
 );
 
+// USER PASSPORT LOCAL CONFIG
+passport.use('user-local', new LocalStrategy(
+	{usernameField: "email", passwordField: "password"},
+	(email, password, done) => {
+		User.findOne(
+            { email: email, password: password},
+            (err, user) => {
+            if (user) {
+                user = user.toObject();
+
+                user.jwt = jwt.sign(
+                    { _id: user._id }, secret,
+                    { expiresIn: 604800 }
+                );
+                return done(null, user);
+            } else {
+                return done(null, false, {message: "Incorrect username or password" });
+            }
+        });
+	}
+));
+
+//  CHILD PASSPORT JWT CONFIG
 passport.use('child-jwt', new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeader(),
     secretOrKey: secret
@@ -68,7 +91,7 @@ passport.use('child-jwt', new JwtStrategy({
                 if (err) {
                     done(err, false);
                 } else if (hero) {
-                    done(null, user);
+                    done(null, hero);
                 } else {
                     done(null, false);
                 }
@@ -77,27 +100,28 @@ passport.use('child-jwt', new JwtStrategy({
     })
 );
 
-// USER PASSPORT LOCAL CONFIG
-passport.use('user-local', new LocalStrategy(
-	{usernameField: "email", passwordField: "password"},
-	(email, password, done) => {
-		// Replace this with User.find (mongoose)
-		User.findOne({ email: email, password: password}, (err, user) => {
-            if (user) {
-                user = user.toObject();
+//  CHILD PASSPORT LOCAL CONFIG
+passport.use('child-local', new LocalStrategy(
+    {usernameField: "name", passwordField: "password"},
+    (name, password, done) => {
+        Child.findOne(
+            { "hero.name": name, "password": password },
+            (err, hero) => {
+                // console.log('hero login found:', hero);
+                if (hero) {
+                    hero = hero.toObject();
 
-                user.jwt = jwt.sign({
-                    _id: user._id
-                }, secret, {
-                    expiresIn: 604800 // 7 days (in seconds)
-                });
-                return done(null, user);
-
-            } else {
-                return done(null, false, {message: "Incorrect username or password" });
+                    hero.jwt = jwt.sign(
+                        { _id: hero._id }, secret,
+                        { expiresIn: 604800 }
+                    );
+                    return done(null, hero);
+                } else {
+                    return done(null, false, { message: 'Incorrect X hero name or password' });
+                }
             }
-        });
-	}
+        );
+    }
 ));
 
 // USER REGISTRATION
@@ -279,7 +303,7 @@ app.post('/child/delete', passport.authenticate('user-jwt', {session: false}), (
 app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req, res) => {
 
     var statRoll = function() {
-        return Math.floor((Math.random() * 1));
+        return Math.floor((Math.random() * 2));
     };
 
     var newQuest = new Quest({
@@ -323,26 +347,44 @@ app.get('/user/quests', passport.authenticate('user-jwt', {session: false}), (re
 });
 
 //  HERO LOGIN
-app.post('/hero/login', (req, res) => {
-    Child.find({ "hero.name" : req.body.name, "password": req.body.password }, (err, hero) => {
+app.post('/hero/login', passport.authenticate('child-local', {session:false}), (req, res) => {
+    if (req.user) {
+        res.send({status: 'success', hero: req.user});
+    } else {
+        res.send({ status: 'error', message: 'incorrect login/password'});
+    }
+
+});
+
+// GET HERO BY ID
+app.get('/hero', passport.authenticate("child-jwt", {session: false}), (req, res) => {
+
+    Child.findById(req.user._id,
+        (err, hero) => {
         if (err) {
-            res.send({ status: 'error', message: 'invalid user/pass combination for hero'});
+            res.send({status: 'error', message: 'err'});
             return;
         }
-        res.send({ status: 'success', hero: hero});
+
+        hero = hero.toObject();
+
+        hero.jwt = jwt.sign({
+            _id: hero._id
+        }, secret, {
+            expiresIn: 604800 // 7 days in seconds
+        });
+
+        res.send({status: 'success', data: hero});
     });
 });
 
 // GET QUESTS FOR THE HERO
-app.get('/hero/quests', (req, res) => {
+app.get('/hero/quests/available', passport.authenticate('child-jwt', {session:false}), (req, res) => {
     var questId = '';
 
-    // Child.find({ parent: req.user.id }, {(err, child) => {
-
-
-    // });
-
-    Quest.find({"parent": req.user._id}, (err, quests) => {
+    Quest.find(
+        { "parent": req.user.parent },
+        (err, quests) => {
         if (err) {
             res.send({ status: 'error', message: 'unable to retrieve quests due to : ' + err });
             return;

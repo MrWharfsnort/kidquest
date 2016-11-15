@@ -15,6 +15,8 @@ import { ChildLoginComponent } from './child/child-login.component';
 import { QuestAddComponent } from './quest/quest-add.component';
 import { QuestsListComponent } from './quest/quest-list.component';
 
+import { HeroDetailsComponent } from './hero/hero-details.component';
+
 const routes: Routes = [
     {
         path: '',
@@ -37,12 +39,9 @@ const routes: Routes = [
         ]
     },
     {
-        path: 'hero/login',
-        component: ChildLoginComponent
-    },
-    {
-        path: 'hero/details',
-        component: ChildCardComponent
+        path: 'hero',
+        canActivate: [AuthService],
+        component: HeroDetailsComponent
     }
 ];
 
@@ -51,15 +50,3 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 export class AppRoutingModule { }
-
-
-// UserDetailComponent
-// UserLoginComponent
-// UserRegistrationComponent
-// HeroDetailsComponent
-// HeroAddComponent
-// ChildViewComponent
-// ChildRegistrationComponent
-// QuestDetailsComponent
-// QuestCardComponent
-// QuestAddComponent

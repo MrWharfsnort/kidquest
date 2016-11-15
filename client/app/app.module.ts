@@ -34,6 +34,10 @@ import { ChildLoginComponent } from './child/child-login.component';
 import { QuestAddComponent } from './quest/quest-add.component';
 import { QuestsListComponent } from './quest/quest-list.component';
 
+//  hero
+import { HeroDetailsComponent } from './hero/hero-details.component';
+import { HeroCardComponent } from './hero/hero-card.component';
+
 
 @NgModule({
     imports: [
@@ -52,7 +56,8 @@ import { QuestsListComponent } from './quest/quest-list.component';
         UserDetailsComponent, UserRegistrationComponent, UserLoginComponent,
         NavBarComponent, SidebarComponent,
         ChildAddComponent, ChildCardComponent, ChildrenDisplayComponent, ChildLoginComponent,
-        QuestAddComponent, QuestsListComponent
+        QuestAddComponent, QuestsListComponent,
+        HeroDetailsComponent, HeroCardComponent
     ],
     bootstrap: [ AppComponent ]
 })

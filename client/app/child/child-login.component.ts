@@ -22,11 +22,12 @@ export class ChildLoginComponent {
     };
 
     private submitLogin() {
-        console.log(this.heroLogin);
-        this.apiService.postObs('/hero/login', this.heroLogin, this.authService.getJWT()).subscribe((res) => {
+        this.authService.heroLogin(this.heroLogin.name, this.heroLogin.password).subscribe((res) => {
             if (res.status === 'success') {
-                this.authService.user = res.hero;
-                this.router.navigate(['/hero/details']);
+                this.authService.hero = res.hero;
+                this.router.navigate(['/hero']);
+            } else {
+                console.log('@child-login error => ', res.message);
             }
         });
     }

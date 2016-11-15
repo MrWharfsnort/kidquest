@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { AuthService } from '../auth.service';
 import { User } from '../user/user';
-import { UserLoginComponent } from './user-login.component';
+import { UserLoginComponent } from '../user/user-login.component';
 
 @Component({
     selector: 'navbar',

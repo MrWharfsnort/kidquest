@@ -20,6 +20,4 @@ export class ChildCardComponent {
 
     @Output()
         remove = new EventEmitter();
-
-
 }
