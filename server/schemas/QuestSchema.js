@@ -6,6 +6,7 @@ module.exports = (mongoose, LootItem) => {
         description: String,
         parent: String,
         isAccepted: Boolean,
+        isAvailable: Boolean,
         isCompleted: Boolean,
         isVerified: Boolean,
         lootTable: [String],

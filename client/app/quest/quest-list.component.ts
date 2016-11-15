@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 
 import { AuthService } from '../auth.service';
 import { ApiService } from '../api.service';
+import { QuestService } from './quest.service';
+
+import { QuestCardComponent } from '../quest/quest-card.component';
 
 @Component({
     selector: 'quests-list',
@@ -12,26 +15,12 @@ export class QuestsListComponent {
 
     constructor(
         private apiService: ApiService,
-        private authService: AuthService
+        private authService: AuthService,
+        private questService: QuestService
     ) { }
 
-    quests: Array<any>;
-
-    private getQuests() {
-        this.apiService.getObs('/user/quests', this.authService.getJWT()).subscribe((res) => {
-            this.quests = [];
-
-            console.log('@getQuests => ', res);
-
-            for (let quest of res.quests) {
-                this.quests.push(quest);
-            }
-
-            this.quests.reverse();
-        });
-    }
-
     ngOnInit() {
-        this.getQuests();
+        this.questService.getQuests();
     }
+
 }

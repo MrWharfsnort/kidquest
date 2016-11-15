@@ -27,8 +27,9 @@ export class UserLoginComponent {
             this.error = 'username cannot be empty';
         } else {
             this.authService.userLogin(this.userLogin.email, this.userLogin.password).subscribe((res) => {
+                console.log('user auth', res);
                 if (res.status === 'success') {
-                    this.authService.user = res.user;
+                    console.log('asdfasdfas');
                     this.router.navigate(['/user']);
                 } else {
                     console.log('failboat');

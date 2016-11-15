@@ -1,40 +1,6 @@
-<div class="col-lg-12" *ngFor="let quest of quests">
-    <div class="panel panel-warning quest-card">
-        <div class="panel-heading">
-            <div class="panel-title">
-                {{ quest.title }}
-                <div class="quest-notifications">
-                    <small>
-                        <span class="label label-danger" *ngIf="!quest.isAccepted">available</span>
-                        <span class="label label-success" *ngIf="quest.isAccepted">quest accepted</span>
-                        <span class="label label-danger" *ngIf="!quest.isCompleted">incomplete</span>
-                        <span class="label label-success" *ngIf="quest.isCompleted">completed</span>
-                    </small>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-lg-6">
-                    <h5>Details:</h5>
-                    {{ quest.description }}
-                </div>
-                <div class="col-lg-6">
-                    <h5>Rewards:</h5>
-                    <div class="well">
-                        <span class="label label-success" *ngIf="quest.rewards.strength > 0">Strength: +{{ quest.rewards.strength }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.wisdom > 0">Wisdom: +{{ quest.rewards.wisdom }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.kindness > 0">Kindness: +{{ quest.rewards.kindness }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.courage > 0">Courage +{{ quest.rewards.courage }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.responsibility > 0">Responsibility +{{ quest.rewards.responsibility }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 text-right">
-                    <button class="btn btn-sm btn-danger" [disabled]="!quest.isComplete">delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="col-lg-12">
+    <quest-card
+        *ngFor="let quest of questService.quests"
+        [quest]="quest"
+    ></quest-card>
 </div>

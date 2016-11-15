@@ -380,10 +380,17 @@ app.get('/hero', passport.authenticate("child-jwt", {session: false}), (req, res
 
 // GET QUESTS FOR THE HERO
 app.get('/hero/quests/available', passport.authenticate('child-jwt', {session:false}), (req, res) => {
-    var questId = '';
+    if (req.hero) {
+        console.log('fetching quests for hero: ', req.hero);
+    } else if (req.user) {
+        console.log('fetching quests for user: ', req.user);
+    }
 
     Quest.find(
-        { "parent": req.user.parent },
+        {
+            "parent": req.user.parent,
+            "isCompleted": false
+        },
         (err, quests) => {
         if (err) {
             res.send({ status: 'error', message: 'unable to retrieve quests due to : ' + err });

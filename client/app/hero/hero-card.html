@@ -1,14 +1,12 @@
-{{ this.hero | json }}
-<!--<h3>{{ this.hero.name.first }}</h3>-->
-<!--<div class="col-md-6 col-lg-4">
+
     <div class="panel panel-warning child-card">
         <div class="panel-heading">
             <div class="row">
                 <div class="col-xs-6">
-                    <h3 class="panel-title">{{ this.hero.name.first }}  {{ this.hero.name.last }}</h3>
+                    <h3 class="panel-title">{{ hero.name.first }}  {{ hero.name.last }}</h3>
                 </div>
                 <div class="col-xs-6 text-right">
-                    <span class="level-badge text-right">Level: {{ this.hero.hero.level }}</span>
+                    <span class="level-badge text-right">Level: {{ hero.hero.level }}</span>
                 </div>
             </div>
         </div>
@@ -23,35 +21,35 @@
                         <table class="table table-condensed borderless hero-stats">
                             <tr>
                                 <td><strong>Hero:</strong></td>
-                                <td>{{ this.hero.hero.name }}</td>
+                                <td>{{ hero.hero.name }}</td>
                             </tr>
                             <tr>
                                 <td><strong>XP:</strong> </td>
-                                <td>{{ this.hero.hero.xp }}</td>
+                                <td>{{ hero.hero.xp }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Credits:</strong> </td>
-                                <td>{{ this.hero.hero.credits }}</td>
+                                <td>{{ hero.hero.credits }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Strength:</strong> </td>
-                                <td>{{ this.hero.hero.strength }}</td>
+                                <td>{{ hero.hero.strength }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Wisdom:</strong> </td>
-                                <td>{{ this.hero.hero.wisdom }}</td>
+                                <td>{{ hero.hero.wisdom }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Kindness:</strong> </td>
-                                <td>{{ this.hero.hero.kindness }}</td>
+                                <td>{{ hero.hero.kindness }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Courage:</strong> </td>
-                                <td>{{ this.hero.hero.courage }}</td>
+                                <td>{{ hero.hero.courage }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Responsibility:</strong>
-                                <td>{{ this.hero.hero.responsibility }}</td>
+                                <td>{{ hero.hero.responsibility }}</td>
                             </tr>
                         </table>
                     </div>
@@ -59,4 +57,3 @@
             </div>
         </div>
     </div>
-</div>-->

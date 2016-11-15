@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    <div class="col-md-6 col-lg-4">
+        <hero-card></hero-card>
+    </div>
+    <div class="col-md-8">
+        <quest-card
+            *ngFor="let quest of questService.quests"
+            [quest]=quest
+        ></quest-card>
+    </div>
+</div>
