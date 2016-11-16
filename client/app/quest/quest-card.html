@@ -39,10 +39,11 @@
            <div class="row" *ngIf="authService.hero">
                 <div class="col-xs-12 text-right">
                     <button class="btn btn-sm btn-success"
-                        [hidden]="!quest.isAccepted"
+                        *ngIf="!quest.isAccepted"
+                        (click)="accept.emit()"
                     >accept quest</button>
                     <button class="btn btn-sm btn-danger"
-                        [hidden]="quest.isAccepted"
+                        *ngIf="quest.isAccepted"
                     >complete quest</button>
                 </div>
             </div>

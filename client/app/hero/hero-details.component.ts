@@ -15,6 +15,10 @@ export class HeroDetailsComponent {
         private questService: QuestService
     ) { }
 
+    test() {
+        console.log('blah');
+    }
+
     @Input()
         quest: any;
 

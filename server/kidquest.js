@@ -303,7 +303,15 @@ app.post('/child/delete', passport.authenticate('user-jwt', {session: false}), (
 app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req, res) => {
 
     var statRoll = function() {
-        return Math.floor((Math.random() * 2));
+        var r = Math.random();
+
+        if (r < 0.5) {
+            return 0;
+        } else if (r < 0.9) {
+            return 1;
+        } else {
+            return 2;
+        }
     };
 
     var newQuest = new Quest({
@@ -336,6 +344,7 @@ app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req
     });
 });
 
+// DELETE A QUEST
 app.post('/quest/delete', passport.authenticate('user-jwt', {session: false}), (req, res) => {
     Quest.remove(
         { _id: req.body._id},
@@ -351,7 +360,7 @@ app.post('/quest/delete', passport.authenticate('user-jwt', {session: false}), (
 
 });
 
-// GET QUESTS THE USER HAS ADDED
+//  GET QUESTS THE USER HAS ADDED
 app.get('/user/quests', passport.authenticate('user-jwt', {session: false}), (req, res) => {
     Quest.find({ parent : req.user._id }, (err, quests) => {
         if (err) {
@@ -373,7 +382,7 @@ app.post('/hero/login', passport.authenticate('child-local', {session:false}), (
 
 });
 
-// GET HERO BY ID
+//  GET HERO BY ID
 app.get('/hero', passport.authenticate("child-jwt", {session: false}), (req, res) => {
 
     Child.findById(req.user._id,
@@ -395,7 +404,7 @@ app.get('/hero', passport.authenticate("child-jwt", {session: false}), (req, res
     });
 });
 
-// GET QUESTS FOR THE HERO
+//  GET QUESTS FOR THE HERO
 app.get('/hero/quests/available', passport.authenticate('child-jwt', {session:false}), (req, res) => {
     if (req.hero) {
         console.log('fetching quests for hero: ', req.hero.name);
@@ -416,6 +425,25 @@ app.get('/hero/quests/available', passport.authenticate('child-jwt', {session:fa
 
         res.send({ status: 'success', quests: quests });
     });
+});
+
+app.post('/hero/quest/accept', passport.authenticate('child-jwt', {session:false}), (req, res) => {
+    console.log('accepting quest');
+
+    Quest.findOneAndUpdate(
+        { _id: req.body._id },
+        { isAccepted: true },
+        { new: true },
+        (err, quest) => {
+            if (err) {
+                res.send({status: 'error', message: err });
+                return;
+            } else {
+                console.log('quest updated: ', quest);
+                res.send({status: 'success', message: quest});
+            }
+        }
+    );
 });
 
 // handle 404 error

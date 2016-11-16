@@ -24,4 +24,7 @@ export class QuestCardComponent {
     @Output()
         delete = new EventEmitter();
 
+    @Output()
+        accept = new EventEmitter();
+
 }
