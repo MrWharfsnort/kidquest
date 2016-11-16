@@ -324,6 +324,8 @@ app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req
         isVerified: false,
         lootTable: [],
         rewards: {
+            xp: req.body.xp,
+            credits: req.body.credits,
             strength: statRoll(),
             wisdom: statRoll(),
             kindness: statRoll(),
@@ -441,6 +443,45 @@ app.post('/hero/quest/accept', passport.authenticate('child-jwt', {session:false
             } else {
                 console.log('quest updated: ', quest);
                 res.send({status: 'success', message: quest});
+            }
+        }
+    );
+});
+
+//  mark a quest complete
+app.post('/hero/quest/complete', passport.authenticate('child-jwt', {session: false}), (req, res) => {
+    console.log('complete quest => ', req.body._id);
+    Quest.findOneAndUpdate(
+        { _id: req.body._id },
+        { isCompleted: true },
+        { new: true },
+        (err, quest) => {
+            if (err) {
+                res.send({ status: 'error', message: err });
+                return;
+            } else {
+
+                Child.findOneAndUpdate(
+                    { _id: req.user._id },
+                    { $inc: {
+                        "hero.xp": quest.rewards.xp,
+                        "hero.credits": quest.rewards.credits,
+                        "hero.strength": quest.rewards.strength,
+                        "hero.wisdom": quest.rewards.wisdom,
+                        "hero.kindness": quest.rewards.kindness,
+                        "hero.courage": quest.rewards.kindness,
+                        "hero.responsibility": quest.rewards.responsibility
+                    }},
+                    {new: true},
+                    (err, child) => {
+                        if (err) {
+                            return console.log(err);
+                        }
+                    }
+                );
+
+                console.log('quest completed', quest);
+                res.send({ status: 'success', message: 'quest completed' });
             }
         }
     );

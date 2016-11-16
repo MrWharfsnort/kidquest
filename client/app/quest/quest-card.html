@@ -21,11 +21,34 @@
                 <div class="col-lg-6">
                     <h5>Rewards:</h5>
                     <div class="well">
-                        <span class="label label-success" *ngIf="quest.rewards.strength > 0">Strength: +{{ quest.rewards.strength }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.wisdom > 0">Wisdom: +{{ quest.rewards.wisdom }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.kindness > 0">Kindness: +{{ quest.rewards.kindness }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.courage > 0">Courage +{{ quest.rewards.courage }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.responsibility > 0">Responsibility +{{ quest.rewards.responsibility }}</span>
+                        <span
+                            class="label label-info"
+                            *ngIf="quest.rewards.xp > 0"
+                            >{{ quest.rewards.xp }}xp</span>
+                        <span
+                            class="label label-info"
+                            *ngIf="quest.rewards.credits > 0"
+                        >{{ quest.rewards.credits }} cR</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.strength > 0"
+                        >Strength: +{{ quest.rewards.strength }}</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.wisdom > 0"
+                        >Wisdom: +{{ quest.rewards.wisdom }}</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.kindness > 0"
+                        >Kindness: +{{ quest.rewards.kindness }}</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.courage > 0"
+                        >Courage +{{ quest.rewards.courage }}</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.responsibility > 0"
+                        >Responsibility +{{ quest.rewards.responsibility }}</span>
                     </div>
                 </div>
             </div>
@@ -44,6 +67,7 @@
                     >accept quest</button>
                     <button class="btn btn-sm btn-danger"
                         *ngIf="quest.isAccepted"
+                        (click)="complete.emit()"
                     >complete quest</button>
                 </div>
             </div>

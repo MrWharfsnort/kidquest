@@ -11,6 +11,8 @@ module.exports = (mongoose, LootItem) => {
         isVerified: Boolean,
         lootTable: [String],
         rewards: {
+            xp: Number,
+            credits: Number,
             strength: Number,
             wisdom: Number,
             kindness: Number,

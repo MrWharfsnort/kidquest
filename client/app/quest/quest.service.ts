@@ -21,7 +21,9 @@ export class QuestService {
 
     private newQuest: Quest = {
         title: '',
-        description: ''
+        description: '',
+        xp: 0,
+        credits: 0
     };
 
     public getQuests() {
@@ -57,6 +59,19 @@ export class QuestService {
             } else {
                 console.log(res.message);
             }
+        });
+    }
+
+    public completeQuest(quest) {
+        console.log('Completing quest...');
+        this.apiService.postObs('/hero/quest/complete', { _id: quest._id }, this.authService.getJWT()).subscribe((res) => {
+           if (res.status === 'success') {
+               this.message = res.message;
+               this.getAvailableQuests();
+           } else {
+               console.log('error completing quest: ', res.message);
+           }
+
         });
     }
 

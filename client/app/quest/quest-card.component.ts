@@ -27,4 +27,7 @@ export class QuestCardComponent {
     @Output()
         accept = new EventEmitter();
 
+    @Output()
+        complete = new EventEmitter();
+
 }

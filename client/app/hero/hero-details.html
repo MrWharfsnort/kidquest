@@ -3,10 +3,12 @@
         <hero-card></hero-card>
     </div>
     <div class="col-md-6 col-lg-8 col-lg-offset-4">
+        <p [hidden]="questService.quests">No quests currently available</p>
         <quest-card
             *ngFor="let quest of questService.quests"
             [quest]="quest"
             (accept)="questService.acceptQuest(quest)"
+            (complete)="questService.completeQuest(quest)"
         ></quest-card>
     </div>
 </div>
