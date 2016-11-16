@@ -96,7 +96,12 @@ a.navbar-brand:hover {
   border-radius: 5%;
 }
 
-.child-card, .quest-card, .panel, .btn, .label {
+.child-card {
+  background: url('../img/scroll-texture.jpg');
+  background-size: cover;
+}
+
+.child-card, .quest-card, .panel, .btn, .label,.avatar {
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
 }
 
@@ -136,9 +141,9 @@ a.navbar-brand:hover {
   color: rgb(200, 200, 200);
   background-color: rgba(0, 0, 0, 0.8);;
 }
-.panel, .panel-warning > .panel-body {
+/*.panel, .panel-warning > .panel-body {
   background-color: rgba(255, 255, 255, 0.35);
-}
+}*/
 
 /*.quest-toolbar {
   background-color: rgba(0, 0, 0, 0.1);
