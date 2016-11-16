@@ -303,7 +303,15 @@ app.post('/child/delete', passport.authenticate('user-jwt', {session: false}), (
 app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req, res) => {
 
     var statRoll = function() {
-        return Math.floor((Math.random() * 2));
+        var r = Math.random();
+
+        if (r < 0.5) {
+            return 0;
+        } else if (r < 0.9) {
+            return 1;
+        } else {
+            return 2;
+        }
     };
 
     var newQuest = new Quest({
@@ -312,8 +320,12 @@ app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req
         parent: req.user._id,
         isAccepted: false,
         isCompleted: false,
+        isAvailable: true,
+        isVerified: false,
         lootTable: [],
         rewards: {
+            xp: req.body.xp,
+            credits: req.body.credits,
             strength: statRoll(),
             wisdom: statRoll(),
             kindness: statRoll(),
@@ -334,7 +346,23 @@ app.post('/quest/add', passport.authenticate('user-jwt', {session: false}), (req
     });
 });
 
-// GET QUESTS THE USER HAS ADDED
+// DELETE A QUEST
+app.post('/quest/delete', passport.authenticate('user-jwt', {session: false}), (req, res) => {
+    Quest.remove(
+        { _id: req.body._id},
+        (err, data) => {
+            if (err) {
+                res.send({status: 'error', message: err});
+                return;
+            } else {
+                res.send({status: 'success', message: 'quest removed'});
+            }
+        }
+    );
+
+});
+
+//  GET QUESTS THE USER HAS ADDED
 app.get('/user/quests', passport.authenticate('user-jwt', {session: false}), (req, res) => {
     Quest.find({ parent : req.user._id }, (err, quests) => {
         if (err) {
@@ -356,7 +384,7 @@ app.post('/hero/login', passport.authenticate('child-local', {session:false}), (
 
 });
 
-// GET HERO BY ID
+//  GET HERO BY ID
 app.get('/hero', passport.authenticate("child-jwt", {session: false}), (req, res) => {
 
     Child.findById(req.user._id,
@@ -378,12 +406,12 @@ app.get('/hero', passport.authenticate("child-jwt", {session: false}), (req, res
     });
 });
 
-// GET QUESTS FOR THE HERO
+//  GET QUESTS FOR THE HERO
 app.get('/hero/quests/available', passport.authenticate('child-jwt', {session:false}), (req, res) => {
     if (req.hero) {
-        console.log('fetching quests for hero: ', req.hero);
+        console.log('fetching quests for hero: ', req.hero.name);
     } else if (req.user) {
-        console.log('fetching quests for user: ', req.user);
+        console.log('fetching quests for user: ', req.user.name);
     }
 
     Quest.find(
@@ -399,6 +427,64 @@ app.get('/hero/quests/available', passport.authenticate('child-jwt', {session:fa
 
         res.send({ status: 'success', quests: quests });
     });
+});
+
+app.post('/hero/quest/accept', passport.authenticate('child-jwt', {session:false}), (req, res) => {
+    console.log('accepting quest');
+
+    Quest.findOneAndUpdate(
+        { _id: req.body._id },
+        { isAccepted: true },
+        { new: true },
+        (err, quest) => {
+            if (err) {
+                res.send({status: 'error', message: err });
+                return;
+            } else {
+                console.log('quest updated: ', quest);
+                res.send({status: 'success', message: quest});
+            }
+        }
+    );
+});
+
+//  mark a quest complete
+app.post('/hero/quest/complete', passport.authenticate('child-jwt', {session: false}), (req, res) => {
+    console.log('complete quest => ', req.body._id);
+    Quest.findOneAndUpdate(
+        { _id: req.body._id },
+        { isCompleted: true },
+        { new: true },
+        (err, quest) => {
+            if (err) {
+                res.send({ status: 'error', message: err });
+                return;
+            } else {
+
+                Child.findOneAndUpdate(
+                    { _id: req.user._id },
+                    { $inc: {
+                        "hero.xp": quest.rewards.xp,
+                        "hero.credits": quest.rewards.credits,
+                        "hero.strength": quest.rewards.strength,
+                        "hero.wisdom": quest.rewards.wisdom,
+                        "hero.kindness": quest.rewards.kindness,
+                        "hero.courage": quest.rewards.kindness,
+                        "hero.responsibility": quest.rewards.responsibility
+                    }},
+                    {new: true},
+                    (err, child) => {
+                        if (err) {
+                            return console.log(err);
+                        }
+                    }
+                );
+
+                console.log('quest completed', quest);
+                res.send({ status: 'success', message: 'quest completed' });
+            }
+        }
+    );
 });
 
 // handle 404 error

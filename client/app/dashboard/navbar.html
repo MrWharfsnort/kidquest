@@ -16,6 +16,10 @@
                 <li><a routerLink='/user'><span class='glyphicon glyphicon-user'></span> {{ authService.user.name }}</a></li>
                 <li><a (click)=authService.logout()><span class='glyphicon glyphicon-log-out'></span> Logout</a></li>
             </ul>
+            <ul *ngIf='authService.hero' class="nav navbar-nav navbar-right">
+                <li><a routerLink='/hero'><span class='glyphicon glyphicon-user'></span> {{ authService.hero.name.first }}</a></li>
+                <li><a (click)=authService.heroLogout()><span class='glyphicon glyphicon-log-out'></span> Logout</a></li>
+            </ul>
         </div>
     </div>
 </nav>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ApiService } from '../api.service';
 import { AuthService } from '../auth.service';
 import { QuestService } from './quest.service';
@@ -20,5 +20,14 @@ export class QuestCardComponent {
 
     @Input()
         quest: Quest;
+
+    @Output()
+        delete = new EventEmitter();
+
+    @Output()
+        accept = new EventEmitter();
+
+    @Output()
+        complete = new EventEmitter();
 
 }

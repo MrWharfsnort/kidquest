@@ -124,7 +124,10 @@ a.navbar-brand:hover {
   box-shadow: 2px 2px 16px rgba(0, 0, 0, 0.25);
 }*/
 
-.panel-warning, .panel-warning input, .panel-warning textarea {
+.panel-warning,
+.panel-warning input,
+.panel-warning textarea,
+.panel-warning select {
   border: 1px solid rgba(0, 0, 0, 0.8);
   /*border: 1px solid rgba(255, 217, 12, 0.8);*/
 }

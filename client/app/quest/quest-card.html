@@ -2,7 +2,7 @@
         <div class="panel-heading">
             <div class="panel-title">
                 {{ quest.title }}
-                <div class="quest-notifications">
+                <div class="quest-notifications" *ngIf="authService.user">
                     <small>
                         <span class="label label-danger" *ngIf="!quest.isAccepted">available</span>
                         <span class="label label-success" *ngIf="quest.isAccepted">quest accepted</span>
@@ -21,22 +21,54 @@
                 <div class="col-lg-6">
                     <h5>Rewards:</h5>
                     <div class="well">
-                        <span class="label label-success" *ngIf="quest.rewards.strength > 0">Strength: +{{ quest.rewards.strength }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.wisdom > 0">Wisdom: +{{ quest.rewards.wisdom }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.kindness > 0">Kindness: +{{ quest.rewards.kindness }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.courage > 0">Courage +{{ quest.rewards.courage }}</span>
-                        <span class="label label-success" *ngIf="quest.rewards.responsibility > 0">Responsibility +{{ quest.rewards.responsibility }}</span>
+                        <span
+                            class="label label-info"
+                            *ngIf="quest.rewards.xp > 0"
+                            >{{ quest.rewards.xp }}xp</span>
+                        <span
+                            class="label label-info"
+                            *ngIf="quest.rewards.credits > 0"
+                        >{{ quest.rewards.credits }} cR</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.strength > 0"
+                        >Strength: +{{ quest.rewards.strength }}</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.wisdom > 0"
+                        >Wisdom: +{{ quest.rewards.wisdom }}</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.kindness > 0"
+                        >Kindness: +{{ quest.rewards.kindness }}</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.courage > 0"
+                        >Courage +{{ quest.rewards.courage }}</span>
+                        <span
+                            class="label label-success"
+                            *ngIf="quest.rewards.responsibility > 0"
+                        >Responsibility +{{ quest.rewards.responsibility }}</span>
                     </div>
                 </div>
             </div>
             <div class="row" *ngIf="authService.user">
                 <div class="col-xs-12 text-right">
-                    <button class="btn btn-sm btn-danger" [disabled]="!quest.isComplete">delete</button>
+                    <button class="btn btn-sm btn-danger"
+                        (click)="delete.emit()"
+                    >delete</button>
                 </div>
             </div>
            <div class="row" *ngIf="authService.hero">
                 <div class="col-xs-12 text-right">
-                    <button class="btn btn-sm btn-danger" [disabled]="!quest.isComplete">complete</button>
+                    <button class="btn btn-sm btn-success"
+                        *ngIf="!quest.isAccepted"
+                        (click)="accept.emit()"
+                    >accept quest</button>
+                    <button class="btn btn-sm btn-danger"
+                        *ngIf="quest.isAccepted"
+                        (click)="complete.emit()"
+                    >complete quest</button>
                 </div>
             </div>
         </div>
