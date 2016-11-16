@@ -3,10 +3,10 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-xs-6">
-                    <h3 class="panel-title">{{ hero.name.first }}  {{ hero.name.last }}</h3>
+                    <h3 class="panel-title">{{ heroService.hero.name.first }}  {{ heroService.hero.name.last }}</h3>
                 </div>
                 <div class="col-xs-6 text-right">
-                    <span class="level-badge text-right">Level: {{ hero.hero.level }}</span>
+                    <span class="level-badge text-right">Level: {{ heroService.hero.hero.level }}</span>
                 </div>
             </div>
         </div>
@@ -21,35 +21,35 @@
                         <table class="table table-condensed borderless hero-stats">
                             <tr>
                                 <td><strong>Hero:</strong></td>
-                                <td>{{ hero.hero.name }}</td>
+                                <td>{{ heroService.hero.hero.name }}</td>
                             </tr>
                             <tr>
                                 <td><strong>XP:</strong> </td>
-                                <td>{{ hero.hero.xp }}</td>
+                                <td>{{ heroService.hero.hero.xp }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Credits:</strong> </td>
-                                <td>{{ hero.hero.credits }}</td>
+                                <td>{{ heroService.hero.hero.credits }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Strength:</strong> </td>
-                                <td>{{ hero.hero.strength }}</td>
+                                <td>{{ heroService.hero.hero.strength }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Wisdom:</strong> </td>
-                                <td>{{ hero.hero.wisdom }}</td>
+                                <td>{{ heroService.hero.hero.wisdom }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Kindness:</strong> </td>
-                                <td>{{ hero.hero.kindness }}</td>
+                                <td>{{ heroService.hero.hero.kindness }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Courage:</strong> </td>
-                                <td>{{ hero.hero.courage }}</td>
+                                <td>{{ heroService.hero.hero.courage }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Responsibility:</strong>
-                                <td>{{ hero.hero.responsibility }}</td>
+                                <td>{{ heroService.hero.hero.responsibility }}</td>
                             </tr>
                         </table>
                     </div>

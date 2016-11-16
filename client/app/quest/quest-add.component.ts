@@ -19,5 +19,4 @@ export class QuestAddComponent {
         private router: Router,
         private questService: QuestService
     ) { }
-
 }

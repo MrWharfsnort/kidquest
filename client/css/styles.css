@@ -138,19 +138,34 @@ a.navbar-brand:hover {
 }
 .panel-warning > .panel-heading {
   /*background-color: rgba(255, 217, 12, 0.8);*/
+  border-bottom: 0;
   color: rgb(200, 200, 200);
   background-color: rgba(0, 0, 0, 0.8);;
 }
-/*.panel, .panel-warning > .panel-body {
-  background-color: rgba(255, 255, 255, 0.35);
-}*/
 
-/*.quest-toolbar {
-  background-color: rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  margin: 10px 0px;
-  border-radius: 5px;
-}*/
+.child-card > .panel-heading {
+  background-color: rgba(127, 76, 34, 0.8);
+  font-weight: bolder;
+}
+
+.level-badge {
+  color: rgb(255, 217, 12);
+}
+
+.child-card h3.panel-title {
+  background: rgb(20, 20, 20);
+  font-size: 16px;
+  font-weight: bolder;
+  color: transparent;
+  text-shadow: 0px 1px 3px rgba(255,255,255,0.25);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.reward-label {
+  margin: 2px;
+  display: inline-block;
+}
 
 .btn-primary {
   background-color: rgb(255, 217, 12);

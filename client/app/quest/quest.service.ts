@@ -84,6 +84,8 @@ export class QuestService {
             if (res.status === 'success') {
                 this.newQuest.title = '';
                 this.newQuest.description = '';
+                this.newQuest.xp = 0;
+                this.newQuest.credits = 0;
                 this.router.navigate(['/user/quests']);
             } else {
                 console.log('Error', this.message);

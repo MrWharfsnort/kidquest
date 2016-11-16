@@ -39,6 +39,7 @@ import { QuestService } from './quest/quest.service';
 //  hero
 import { HeroDetailsComponent } from './hero/hero-details.component';
 import { HeroCardComponent } from './hero/hero-card.component';
+import { HeroService } from './hero/hero.service';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { HeroCardComponent } from './hero/hero-card.component';
     providers: [
         ApiService,
         AuthService,
-        QuestService
+        QuestService,
+        HeroService
     ],
     declarations: [
         AppComponent,

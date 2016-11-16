@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../api.service';
 import { AuthService } from '../auth.service';
+import { HeroService } from './hero.service';
 
-import { Hero } from './hero';
+// import { Hero } from './hero';
 
 @Component({
     selector: 'hero-card',
@@ -12,33 +13,11 @@ export class HeroCardComponent {
 
     constructor(
         private apiService: ApiService,
-        private authService: AuthService
+        private authService: AuthService,
+        private heroService: HeroService
     ) { }
 
-    hero: Hero = {
-        name: '',
-        parent: '',
-        activeQuests: [],
-        hero: {
-            name: '',
-            inventory: [],
-            credits: 0,
-            xp: 0,
-            strength: 0,
-            wisdom: 0,
-            kindness: 0,
-            courage: 0,
-            responsibility: 0,
-        }
-    };
-
-    private getHero() {
-        this.apiService.getObs('/hero', this.authService.getHeroJWT()).subscribe((res) => {
-            this.hero = res.data;
-        });
-    }
-
     ngOnInit() {
-        this.getHero();
+        this.heroService.getHero();
     }
 }
