@@ -17,6 +17,8 @@ import { QuestsListComponent } from './quest/quest-list.component';
 
 import { HeroDetailsComponent } from './hero/hero-details.component';
 
+import { AnimationTestComponent } from './animation/animation-test.component';
+
 const routes: Routes = [
     {
         path: '',

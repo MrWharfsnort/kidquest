@@ -9,13 +9,7 @@ import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'register-user',
-    template: `
-        Name: <input [(ngModel)]='user.name' type='text'>
-        Email Address: <input [(ngModel)]='user.email' type='text'>
-        Password: <input [(ngModel)]='user.password' type='password'>
-        <button (click)='addUser()'>submit</button>
-        <p *ngIf='error'>{{ error }}</p>
-    `
+    templateUrl: './app/user/user-registration.html'
 })
 export class UserRegistrationComponent {
 

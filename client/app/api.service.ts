@@ -79,7 +79,7 @@ export class ApiService {
     // See get() for details - this is the same, but performs a POST with a body
     postObs(path: string, data: any, jwt?: string): Observable<any> {
         let opts = {
-            headers: this.getHeaders
+            headers: this.postHeaders
         };
         if (jwt) {
             opts.headers.delete('Authorization');
