@@ -14,7 +14,7 @@ export class ChildrenDisplayComponent {
         private authService: AuthService
     ) { }
 
-    children: Array<any>;
+    children: Array<any> = [];
 
     private getChildren() {
         this.apiService.getObs('/user/children', this.authService.getJWT()).subscribe((res) => {

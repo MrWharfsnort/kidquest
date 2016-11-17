@@ -9,7 +9,8 @@
     </div>
     <div class="form-group">
         <button class='btn btn-success' (click)=submitLogin()>Log In</button>
-        <button routerLink="/register" class="btn btn-info">Register</button>
+        <p class="pull-right">New user?  <a routerLink="/register">Register here!</a></p>
+        <!--<button routerLink="/register" class="btn btn-info">Register</button>-->
         <p class='text-danger' *ngIf='error'>{{ error }}</p>
     </div>
 </form>
