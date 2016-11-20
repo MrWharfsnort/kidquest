@@ -15,7 +15,7 @@ export class QuestService {
         private router: Router
     ) { }
 
-    private quests: Array<any>;
+    private quests: Array<any> = [];
 
     private message: string = '';
 

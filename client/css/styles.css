@@ -94,6 +94,8 @@ a.navbar-brand:hover {
 
 .avatar {
   border-radius: 5%;
+  max-height: 120px;
+  max-width: 120px;
 }
 
 .child-card {

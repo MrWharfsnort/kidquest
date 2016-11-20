@@ -3,7 +3,7 @@
         <hero-card></hero-card>
     </div>
     <div class="col-md-6 col-lg-9 col-lg-offset-3">
-        <p [hidden]="questService.quests">No quests currently available</p>
+        <p *ngIf="questService.quests.length === 0">No quests currently available</p>
         <quest-card
             *ngFor="let quest of questService.quests"
             [quest]="quest"

@@ -1,5 +1,5 @@
-<div [hidden]="children" class="col-md-12 text-center">
-    <p>No children to display.</p>
+<div [hidden]="children.length" class="col-md-12 text-center">
+    <p>No children to display.  Try <a [routerLink]="['child/add']">adding one!</a></p>
 </div>
 <child-card *ngFor="let hero of children"
     [child]="hero"
