@@ -81,10 +81,12 @@ export class ApiService {
         let opts = {
             headers: this.postHeaders
         };
+
         if (jwt) {
             opts.headers.delete('Authorization');
             opts.headers.append('Authorization', 'JWT ' + jwt);
         }
+        
         return this.http.post(
             this.url + path,
             data,
