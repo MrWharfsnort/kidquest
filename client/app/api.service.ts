@@ -1,17 +1,10 @@
-// All services are decorated with the @Injectable decorator
 import { Injectable } from '@angular/core';
-
-// Import the HTTP libraries from the angular http folder
 import { Http, Headers, Response } from '@angular/http';
 
-
-// Import async functionality from the rxjs ("reactive js") library, which
-// angular 2 uses to manage async requests.
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 import 'rxjs/add/observable/throw';
 
-// Decorate our ApiService as Injectable (service)
 @Injectable()
 export class ApiService {
     // We have different headers for post and get. For post, we are sending
@@ -86,7 +79,7 @@ export class ApiService {
             opts.headers.delete('Authorization');
             opts.headers.append('Authorization', 'JWT ' + jwt);
         }
-        
+
         return this.http.post(
             this.url + path,
             data,
